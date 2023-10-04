@@ -9,6 +9,7 @@ def helpp():
 
 # B1 | Image brightness modification
 # to improve while saturated
+# to fix while grayscale
 def brightness(array, num):
     for xIndex, x in enumerate(array):
         for yIndex, y in enumerate(x):
@@ -23,8 +24,21 @@ def brightness(array, num):
 
 
 # B2 | Image contrast modification
-def contrast():
-    print("")
+# to fix while greyscale
+def contrast(array, num):
+    num /= 2
+    for xIndex, x in enumerate(array):
+        for yIndex, y in enumerate(x):
+            for rgbIndex, rgb in enumerate(y):
+                if rgb - num <= 0:
+                    array[xIndex][yIndex][rgbIndex] = 0
+                elif rgb + num >= 255:
+                    array[xIndex][yIndex][rgbIndex] = 255
+                elif rgb <= 127:
+                    array[xIndex][yIndex][rgbIndex] = rgb - num
+                elif rgb >= 128:
+                    array[xIndex][yIndex][rgbIndex] = rgb + num
+    return array
 
 
 # B3 | Negative
@@ -59,7 +73,7 @@ def dflip(array):
 
 
 # main
-image = Image.open("lena.bmp")
+image = Image.open("lenac.bmp")
 arr = np.array(image.getdata())
 if arr.ndim == 1: #grayscale
     arr = arr.reshape(image.size[1], image.size[0])
@@ -67,9 +81,7 @@ else:
     numColorChannels = arr.shape[1]
     arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
 
-# arr = brightness(arr, 0)
-# arr = dflip(arr)
-arr = negative(arr)
+arr = contrast(arr, 100)
 
 newImage = Image.fromarray(arr.astype(np.uint8))
 newImage.show()
