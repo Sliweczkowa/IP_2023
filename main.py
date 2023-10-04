@@ -9,14 +9,15 @@ def helpp():
 # to improve while saturated
 def brightness(array, num):
     for xIndex, x in enumerate(array):
-        for yIndex, y in enumerate(x):
-            for pixelIndex, pixel in enumerate(y):
-                if pixel + num > 255:
-                    array[xIndex][yIndex][pixelIndex] = 255
-                elif pixel + num < 0:
-                    array[xIndex][yIndex][pixelIndex] = 0
+        for pixelIndex, pixel in enumerate(x):
+            for rgbIndex, rgb in enumerate(pixel):
+                print(pixel)
+                if rgb + num >= 255:
+                    array[xIndex][pixelIndex][rgbIndex] = 255
+                elif rgb + num <= 0:
+                    array[xIndex][pixelIndex][rgbIndex] = 0
                 else:
-                    array[xIndex][yIndex][pixelIndex] = pixel + num
+                    array[xIndex][pixelIndex][rgbIndex] = rgb + num
     return array
 
 
