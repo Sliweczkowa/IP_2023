@@ -51,7 +51,7 @@ def hflip(array):
     i = 0
     for y in array:
         while len(y) / 2 > i:
-            array[:, [i, len(y) - 1 - i], :] = array[:, [len(y) - 1 - i, i], :]
+            array[:, [i, len(y) - 1 - i]] = array[:, [len(y) - 1 - i, i]]
             i += 1
     return array
 
@@ -61,7 +61,7 @@ def vflip(array):
     i = 0
     for x in array:
         while len(x) / 2 > i:
-            array[[i, len(x) - 1 - i], :, :] = array[[len(x) - 1 - i, i], :, :]
+            array[[i, len(x) - 1 - i], :] = array[[len(x) - 1 - i, i], :]
             i += 1
     return array
 
@@ -73,15 +73,16 @@ def dflip(array):
 
 
 # main
-image = Image.open("lenac.bmp")
+image = Image.open("lena.bmp")
 arr = np.array(image.getdata())
 if arr.ndim == 1: #grayscale
     arr = arr.reshape(image.size[1], image.size[0])
+    numColorChannels = 1
 else:
     numColorChannels = arr.shape[1]
     arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
 
-arr = contrast(arr, 100)
+dflip(arr)
 
 newImage = Image.fromarray(arr.astype(np.uint8))
 newImage.show()
