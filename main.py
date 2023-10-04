@@ -12,11 +12,11 @@ def brightness(array, num):
         for yIndex, y in enumerate(x):
             for rgbIndex, rgb in enumerate(y):
                 if rgb + num >= 255:
-                    array[xIndex][xIndex][rgbIndex] = 255
+                    array[xIndex][yIndex][rgbIndex] = 255
                 elif rgb + num <= 0:
-                    array[xIndex][xIndex][rgbIndex] = 0
+                    array[xIndex][yIndex][rgbIndex] = 0
                 else:
-                    array[xIndex][xIndex][rgbIndex] = rgb + num
+                    array[xIndex][yIndex][rgbIndex] = rgb + num
     return array
 
 
