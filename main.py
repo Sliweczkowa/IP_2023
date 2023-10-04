@@ -1,11 +1,12 @@
 from PIL import Image
 import numpy as np
 
-
+# HELP | Commands (+ detailed description of arguments) print
 def helpp():
     print("")
 
 
+# B1 | Image brightness modification
 # to improve while saturated
 def brightness(array, num):
     for xIndex, x in enumerate(array):
@@ -20,14 +21,17 @@ def brightness(array, num):
     return array
 
 
+# B2 | Image contrast modification
 def contrast():
     print("")
 
 
+# B3 | Negative
 def negative():
     print("")
 
 
+# G1 | Horizontal flip
 def hflip(array):
     i = 0
     for y in array:
@@ -37,6 +41,7 @@ def hflip(array):
     return array
 
 
+# G2 | Vertical flip
 def vflip(array):
     i = 0
     for x in array:
@@ -46,11 +51,13 @@ def vflip(array):
     return array
 
 
+# G3 | Diagonal flip
 def dflip(array):
     vflip(hflip(array))
     return array
 
 
+# main
 image = Image.open("lenac.bmp")
 arr = np.array(image.getdata())
 if arr.ndim == 1: #grayscale
