@@ -9,35 +9,32 @@ def helpp():
 
 # B1 | Image brightness modification
 # to improve while saturated
-# to fix while grayscale
 def brightness(array, num):
     for xIndex, x in enumerate(array):
         for yIndex, y in enumerate(x):
-            for rgbIndex, rgb in enumerate(y):
-                if rgb + num >= 255:
-                    array[xIndex][yIndex][rgbIndex] = 255
-                elif rgb + num <= 0:
-                    array[xIndex][yIndex][rgbIndex] = 0
-                else:
-                    array[xIndex][yIndex][rgbIndex] = rgb + num
+            if y + num >= 255:
+                array[xIndex][yIndex] = 255
+            elif y + num <= 0:
+                array[xIndex][yIndex] = 0
+            else:
+                array[xIndex][yIndex] = y + num
     return array
 
 
 # B2 | Image contrast modification
-# to fix while greyscale
+# to improve while saturated
 def contrast(array, num):
     num /= 2
     for xIndex, x in enumerate(array):
         for yIndex, y in enumerate(x):
-            for rgbIndex, rgb in enumerate(y):
-                if rgb - num <= 0:
-                    array[xIndex][yIndex][rgbIndex] = 0
-                elif rgb + num >= 255:
-                    array[xIndex][yIndex][rgbIndex] = 255
-                elif rgb <= 127:
-                    array[xIndex][yIndex][rgbIndex] = rgb - num
-                elif rgb >= 128:
-                    array[xIndex][yIndex][rgbIndex] = rgb + num
+            if y - num <= 0:
+                array[xIndex][yIndex] = 0
+            elif y + num >= 255:
+                array[xIndex][yIndex] = 255
+            elif y <= 127:
+                array[xIndex][yIndex] = y - num
+            elif y >= 128:
+                array[xIndex][yIndex] = y + num
     return array
 
 
@@ -82,7 +79,7 @@ else:
     numColorChannels = arr.shape[1]
     arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
 
-dflip(arr)
+brightness(arr, -50)
 
 newImage = Image.fromarray(arr.astype(np.uint8))
 newImage.show()
