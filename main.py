@@ -69,6 +69,26 @@ def dflip(array):
     return array
 
 
+# G4 | Image shrinking
+def shrink(array, num):
+    return array
+
+
+# G5 | Image enlargement
+def enlarge(array, num):
+    return array
+
+
+# N4.1 | Midpoint filter
+def mid(array):
+    return array
+
+
+# N4.2 | Arithmetic mean filter
+def amean(array):
+    return array
+
+
 # main
 image = Image.open("lena.bmp")
 arr = np.array(image.getdata())
