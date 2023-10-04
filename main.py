@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 
+
 # HELP | Commands (+ detailed description of arguments) print
 def helpp():
     print("")
@@ -27,8 +28,8 @@ def contrast():
 
 
 # B3 | Negative
-def negative():
-    print("")
+def negative(array):
+    return 255 - array
 
 
 # G1 | Horizontal flip
@@ -58,7 +59,7 @@ def dflip(array):
 
 
 # main
-image = Image.open("lenac.bmp")
+image = Image.open("lena.bmp")
 arr = np.array(image.getdata())
 if arr.ndim == 1: #grayscale
     arr = arr.reshape(image.size[1], image.size[0])
@@ -68,6 +69,7 @@ else:
 
 # arr = brightness(arr, 0)
 # arr = dflip(arr)
+arr = negative(arr)
 
 newImage = Image.fromarray(arr.astype(np.uint8))
 newImage.show()
