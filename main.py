@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import argparse
 
 
 # HELP | Commands (+ detailed description of arguments) print
@@ -90,17 +91,46 @@ def amean(array):
 
 
 # main
-image = Image.open("lena.bmp")
-arr = np.array(image.getdata())
-if arr.ndim == 1: #grayscale
-    arr = arr.reshape(image.size[1], image.size[0])
-    numColorChannels = 1
-else:
-    numColorChannels = arr.shape[1]
-    arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
 
-brightness(arr, -50)
+value = 0
+imgPath = ""
 
-newImage = Image.fromarray(arr.astype(np.uint8))
-newImage.show()
-newImage.save("result.bmp")
+parser = argparse.ArgumentParser()
+parser.add_argument('--brightness', help='operation to be executed', type=int)
+parser.add_argument('--load', help='loads an image from a given path')
+parser.add_argument('--save', help='saves edited image in a specified folder')
+
+args = parser.parse_args()
+
+if args.load:
+    print(f'loaded image from {args.load}')
+    imgPath = args.load
+    image = Image.open(imgPath)
+    arr = np.array(image.getdata())
+    if arr.ndim == 1: #grayscale
+        numColorChannels = 1
+        arr = arr.reshape(image.size[1], image.size[0])
+    else:
+        numColorChannels = arr.shape[1]
+        arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
+
+if args.brightness:
+    if imgPath == "":
+        print('no image selected!')
+    else:
+        print(f"changing brightness by {args.brightness}")
+        value = args.brightness
+        brightness(arr, value)
+
+if args.save:
+    if imgPath == "":
+        print('no image to save!')
+    else:
+        newImage = Image.fromarray(arr.astype(np.uint8))
+        newImage.save(args.save)
+        newImage.show()
+
+
+
+#../img/result.bmp
+#newImage.show()
