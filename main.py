@@ -3,11 +3,6 @@ import numpy as np
 import argparse
 
 
-# HELP | Commands (+ detailed description of arguments) print
-def helpp():
-    print("")
-
-
 # B1 | Image brightness modification
 # to improve while saturated
 def brightness(array, num):
@@ -43,6 +38,7 @@ def contrast(array, num):
 def negative(array):
     array[:] = 255 - array
     return array
+
 
 # G1 | Horizontal flip
 def hflip(array):
@@ -91,7 +87,6 @@ def amean(array):
 
 
 # main
-
 value = 0
 imgPath = ""
 
