@@ -41,8 +41,8 @@ def contrast(array, num):
 
 # B3 | Negative
 def negative(array):
-    return 255 - array
-
+    array[:] = 255 - array
+    return array
 
 # G1 | Horizontal flip
 def hflip(array):
@@ -96,7 +96,12 @@ value = 0
 imgPath = ""
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--brightness', help='operation to be executed', type=int)
+parser.add_argument('--brightness', help='change of brightness', type=int)
+parser.add_argument('--contrast', help='change of contrast', type=int)
+parser.add_argument('--negative', help='negative of the image', action="store_true")
+parser.add_argument('--hflip', help='horizontal flip', action="store_true")
+parser.add_argument('--vflip', help='vertical flip', action="store_true")
+parser.add_argument('--dflip', help='diagonal flip', action="store_true")
 parser.add_argument('--load', help='loads an image from a given path')
 parser.add_argument('--save', help='saves edited image in a specified folder')
 
@@ -118,9 +123,39 @@ if args.brightness:
     if imgPath == "":
         print('no image selected!')
     else:
-        print(f"changing brightness by {args.brightness}")
         value = args.brightness
         brightness(arr, value)
+
+if args.contrast:
+    if imgPath == "":
+        print('no image selected!')
+    else:
+        value = args.contrast
+        contrast(arr, value)
+
+if args.negative:
+    if imgPath == "":
+        print('no image selected!')
+    else:
+        negative(arr)
+
+if args.hflip:
+    if imgPath == "":
+        print('no image selected!')
+    else:
+        hflip(arr)
+        
+if args.vflip:
+    if imgPath == "":
+        print('no image selected!')
+    else:
+        vflip(arr)
+
+if args.dflip:
+    if imgPath == "":
+        print('no image selected!')
+    else:
+        dflip(arr)
 
 if args.save:
     if imgPath == "":
@@ -129,8 +164,3 @@ if args.save:
         newImage = Image.fromarray(arr.astype(np.uint8))
         newImage.save(args.save)
         newImage.show()
-
-
-
-#../img/result.bmp
-#newImage.show()
