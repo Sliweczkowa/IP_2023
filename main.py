@@ -97,13 +97,12 @@ parser.add_argument('--negative', help='negative of the image', action="store_tr
 parser.add_argument('--hflip', help='horizontal flip', action="store_true")
 parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
-parser.add_argument('--load', help='loads an image from a given path')
-parser.add_argument('--save', help='saves edited image in a specified folder')
+parser.add_argument('--load', help='loads an image from a given path', required=1)
+parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', required=1)
 
 args = parser.parse_args()
 
 if args.load:
-    print(f'loaded image from {args.load}')
     imgPath = args.load
     image = Image.open(imgPath)
     arr = np.array(image.getdata())
@@ -115,47 +114,26 @@ if args.load:
         arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
 
 if args.brightness:
-    if imgPath == "":
-        print('no image selected!')
-    else:
-        value = args.brightness
-        brightness(arr, value)
+    value = args.brightness
+    brightness(arr, value)
 
 if args.contrast:
-    if imgPath == "":
-        print('no image selected!')
-    else:
-        value = args.contrast
-        contrast(arr, value)
+    value = args.contrast
+    contrast(arr, value)
 
 if args.negative:
-    if imgPath == "":
-        print('no image selected!')
-    else:
-        negative(arr)
+    negative(arr)
 
 if args.hflip:
-    if imgPath == "":
-        print('no image selected!')
-    else:
-        hflip(arr)
+    hflip(arr)
         
 if args.vflip:
-    if imgPath == "":
-        print('no image selected!')
-    else:
-        vflip(arr)
+    vflip(arr)
 
 if args.dflip:
-    if imgPath == "":
-        print('no image selected!')
-    else:
-        dflip(arr)
+    dflip(arr)
 
 if args.save:
-    if imgPath == "":
-        print('no image to save!')
-    else:
-        newImage = Image.fromarray(arr.astype(np.uint8))
-        newImage.save(args.save)
-        newImage.show()
+    newImage = Image.fromarray(arr.astype(np.uint8))
+    newImage.save(args.save)
+    newImage.show()
