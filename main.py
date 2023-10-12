@@ -115,8 +115,31 @@ def mid(array, size):
 
 
 # N4.2 | Arithmetic mean filter
-def amean(array):
-    return array
+def amean(array, size):
+    height = len(array[0])
+    width = len(array)
+
+    border = size // 2
+
+    if(array.ndim == 2):
+        filtered_array = np.empty([height, width])
+        for i in range(border, height - border):
+                for j in range(border, width - border):
+                    neighborhood = array[i - border:i + border + 1, j - border:j + border + 1]
+                    amean = np.mean(neighborhood)
+                    filtered_array[i, j] = amean
+    
+    if(array.ndim == 3):
+        filtered_array = np.empty([height, width, 3])
+
+        for c in range(3):
+            for i in range(border, height - border):
+                for j in range(border, width - border):
+                    neighborhood = array[i - border:i + border + 1, j - border:j + border + 1, c]
+                    amean = (np.mean(neighborhood))
+                    filtered_array[i, j, c] = amean
+
+    return filtered_array
 
 
 # main
@@ -131,6 +154,7 @@ parser.add_argument('--hflip', help='horizontal flip', action="store_true")
 parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
 parser.add_argument('--mid', help='midpoint filter', type=int)
+parser.add_argument('--amean', help='arithmetic mean filter', type=int)
 parser.add_argument('--load', help='loads an image from a given path', required=True)
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', required=True)
 
@@ -170,6 +194,10 @@ if args.dflip:
 if args.mid:
     value = args.mid
     arr = mid(arr, value)
+
+if args.amean:
+    value = args.amean
+    arr = amean(arr, value)
 
 if args.save:
     newImage = Image.fromarray(arr.astype(np.uint8))
