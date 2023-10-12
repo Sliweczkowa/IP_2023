@@ -87,8 +87,31 @@ def resize(array0, width1, height1):
 
 
 # N4.1 | Midpoint filter
-def mid(array):
-    return array
+def mid(array, size):
+    height = len(array[0])
+    width = len(array)
+
+    border = size // 2
+
+    if(array.ndim == 2):
+        filtered_array = np.empty([height, width])
+        for i in range(border, height - border):
+                for j in range(border, width - border):
+                    neighborhood = array[i - border:i + border + 1, j - border:j + border + 1]
+                    midpoint = (np.amin(neighborhood) + np.amax(neighborhood)) //2
+                    filtered_array[i, j] = midpoint
+    
+    if(array.ndim == 3):
+        filtered_array = np.empty([height, width, 3])
+
+        for c in range(3):
+            for i in range(border, height - border):
+                for j in range(border, width - border):
+                    neighborhood = array[i - border:i + border + 1, j - border:j + border + 1, c]
+                    midpoint = (np.amin(neighborhood) + np.amax(neighborhood)) //2
+                    filtered_array[i, j, c] = midpoint
+
+    return filtered_array
 
 
 # N4.2 | Arithmetic mean filter
@@ -107,6 +130,7 @@ parser.add_argument('--negative', help='negative of the image', action="store_tr
 parser.add_argument('--hflip', help='horizontal flip', action="store_true")
 parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
+parser.add_argument('--mid', help='midpoint filter', type=int)
 parser.add_argument('--load', help='loads an image from a given path', required=True)
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', required=True)
 
@@ -142,6 +166,10 @@ if args.vflip:
 
 if args.dflip:
     dflip(arr)
+
+if args.mid:
+    value = args.mid
+    arr = mid(arr, value)
 
 if args.save:
     newImage = Image.fromarray(arr.astype(np.uint8))
