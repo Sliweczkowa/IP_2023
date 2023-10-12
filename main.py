@@ -66,14 +66,24 @@ def dflip(array):
     return array
 
 
-# G4 | Image shrinking
-def shrink(array, num):
-    return array
+# G4/G5 | Image shrinking/enlargement
+def resize(array0, width1, height1):
+    width0 = len(array0)
+    height0 = len(array0[0])
 
+    if width1 == 0:
+        width1 = int(width0 * height1 / height0)
+    elif height1 == 0:
+        height1 = int(height0 * width1 / width0)
 
-# G5 | Image enlargement
-def enlarge(array, num):
-    return array
+    if array0.ndim == 2:
+        array1 = np.empty([height1, width1])
+    elif array0.ndim == 3:
+        array1 = np.empty([height1, width1, 3])
+    for h in range(width1):
+        for w in range(height1):
+            array1[w][h] = array0[int(width0 * w / width1)][int(height0 * h / height1)]
+    return array1
 
 
 # N4.1 | Midpoint filter
