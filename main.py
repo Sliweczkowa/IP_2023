@@ -107,8 +107,8 @@ parser.add_argument('--negative', help='negative of the image', action="store_tr
 parser.add_argument('--hflip', help='horizontal flip', action="store_true")
 parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
-parser.add_argument('--load', help='loads an image from a given path', required=1)
-parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', required=1)
+parser.add_argument('--load', help='loads an image from a given path', required=True)
+parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', required=True)
 
 args = parser.parse_args()
 
