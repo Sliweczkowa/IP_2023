@@ -142,6 +142,27 @@ def amean(array, size):
     return filtered_array
 
 
+# E1 | Mean square error 
+def mse(org_img, noise_img, res_img):
+    height = len(org_img[0])
+    width = len(org_img)
+    
+    sum = 0.0
+
+    if(org_img.ndim == 2 and res_img.ndim == 2):
+        for x in range(width):
+            for y in range(height):
+                difference = (org_img[x, y] - res_img[x, y])
+                sum = sum + np.square(difference)
+        err = sum / (width*height) 
+    return err
+
+# E2 | Peak mean square error 
+# E3 | Signal to noise ratio 
+# E4 | Peak signal to noise ratio 
+# E5 | Maximum difference
+
+
 # main
 value = 0
 imgPath = ""
@@ -155,6 +176,7 @@ parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
 parser.add_argument('--mid', help='midpoint filter', type=int)
 parser.add_argument('--amean', help='arithmetic mean filter', type=int)
+parser.add_argument('--amean', help='mean squared error', nargs=2, type=str, type=str)
 parser.add_argument('--load', help='loads an image from a given path', required=True)
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', required=True)
 
