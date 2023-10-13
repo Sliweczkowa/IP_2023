@@ -93,22 +93,22 @@ def mid(array, size):
 
     border = size // 2
 
-    if(array.ndim == 2):
+    if array.ndim == 2:
         filtered_array = np.empty([height, width])
         for i in range(border, height - border):
-                for j in range(border, width - border):
-                    neighborhood = array[i - border:i + border + 1, j - border:j + border + 1]
-                    midpoint = (np.amin(neighborhood) + np.amax(neighborhood)) //2
-                    filtered_array[i, j] = midpoint
+            for j in range(border, width - border):
+                neighborhood = array[i - border:i + border + 1, j - border:j + border + 1]
+                midpoint = (np.amin(neighborhood) + np.amax(neighborhood)) // 2
+                filtered_array[i, j] = midpoint
     
-    if(array.ndim == 3):
+    if array.ndim == 3:
         filtered_array = np.empty([height, width, 3])
 
         for c in range(3):
             for i in range(border, height - border):
                 for j in range(border, width - border):
                     neighborhood = array[i - border:i + border + 1, j - border:j + border + 1, c]
-                    midpoint = (np.amin(neighborhood) + np.amax(neighborhood)) //2
+                    midpoint = (np.amin(neighborhood) + np.amax(neighborhood)) // 2
                     filtered_array[i, j, c] = midpoint
 
     return filtered_array
@@ -121,15 +121,15 @@ def amean(array, size):
 
     border = size // 2
 
-    if(array.ndim == 2):
+    if array.ndim == 2:
         filtered_array = np.empty([height, width])
         for i in range(border, height - border):
-                for j in range(border, width - border):
-                    neighborhood = array[i - border:i + border + 1, j - border:j + border + 1]
-                    amean = np.mean(neighborhood)
-                    filtered_array[i, j] = amean
+            for j in range(border, width - border):
+                neighborhood = array[i - border:i + border + 1, j - border:j + border + 1]
+                amean = np.mean(neighborhood)
+                filtered_array[i, j] = amean
     
-    if(array.ndim == 3):
+    if array.ndim == 3:
         filtered_array = np.empty([height, width, 3])
 
         for c in range(3):
