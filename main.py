@@ -181,16 +181,25 @@ def pmse(org_img, noise_img, fil_img):
     mse_res = mse(org_img, noise_img, fil_img)
 
     #original and filtered
-    err_org_fil = mse_res[0] / np.square(max_org_img)
+    err_org_fil = mse_res[1] / np.square(max_org_img)
 
     #original anf noise
-    err_org_noise = mse_res[1] / np.square(max_org_img)
+    err_org_noise = mse_res[0] / np.square(max_org_img)
 
     return err_org_fil, err_org_noise
 
 # E3 | Signal to noise ratio 
 # E4 | Peak signal to noise ratio 
 # E5 | Maximum difference
+def md(org_img, noise_img, fil_img):
+
+    #original and filtered
+    err_org_fil = np.max(np.absolute(org_img - fil_img))
+
+    #original and noise
+    err_org_noise = np.max(np.absolute(org_img - noise_img))
+
+    return  err_org_fil, err_org_noise
 
 
 # main
@@ -208,6 +217,7 @@ parser.add_argument('--mid', help='midpoint filter', type=int)
 parser.add_argument('--amean', help='arithmetic mean filter', type=int)
 parser.add_argument('--mse', help='mean squared error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
 parser.add_argument('--pmse', help='peak mean squared error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
+parser.add_argument('--md', help='maximum difference error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
 parser.add_argument('--load', help='loads an image from a given path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name')
 
@@ -274,7 +284,14 @@ if args.pmse:
     noise = loadImg(args.pmse[1])
     filtered = loadImg(args.pmse[2])
     result = pmse(original, noise, filtered)
-    print("original/noise: " + str(result[0]) + ", original/filter: " + str(result[1]))
+    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
+
+if args.md:
+    original = loadImg(args.md[0])
+    noise = loadImg(args.md[1])
+    filtered = loadImg(args.md[2])
+    result = md(original, noise, filtered)
+    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
 
 if args.save:
     newImage = Image.fromarray(arr.astype(np.uint8))
