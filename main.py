@@ -3,6 +3,17 @@ import numpy as np
 import argparse
 
 
+def loadImg(path):
+    image = Image.open(path)
+    arr = np.array(image.getdata())
+    if arr.ndim == 1: #grayscale
+        numColorChannels = 1
+        arr = arr.reshape(image.size[1], image.size[0])
+    else:
+        numColorChannels = arr.shape[1]
+        arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
+    return arr
+
 # B1 | Image brightness modification
 # to improve while saturated
 def brightness(array, num):
@@ -142,20 +153,26 @@ def amean(array, size):
     return filtered_array
 
 
+# squared differences sum
+def sqd_dif_sum(img1, img2):
+    sqd_dif = np.square(img1 - img2)
+    sum = np.sum(sqd_dif)
+    return sum
+
 # E1 | Mean square error 
-def mse(org_img, noise_img, res_img):
+def mse(org_img, noise_img, fil_img):
     height = len(org_img[0])
     width = len(org_img)
-    
-    sum = 0.0
 
-    if(org_img.ndim == 2 and res_img.ndim == 2):
-        for x in range(width):
-            for y in range(height):
-                difference = (org_img[x, y] - res_img[x, y])
-                sum = sum + np.square(difference)
-        err = sum / (width*height) 
-    return err
+    #original and filtered
+    sum_org_fil = sqd_dif_sum(org_img, fil_img)
+    err_org_fil = sum_org_fil / (width*height) 
+
+    #original and noise
+    sum_org_noise = sqd_dif_sum(org_img, noise_img)
+    err_org_noise = sum_org_noise / (width*height)
+
+    print("original/noise: " + str(err_org_noise) + ", original/filter: " + str(err_org_fil))
 
 # E2 | Peak mean square error 
 # E3 | Signal to noise ratio 
@@ -176,50 +193,66 @@ parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
 parser.add_argument('--mid', help='midpoint filter', type=int)
 parser.add_argument('--amean', help='arithmetic mean filter', type=int)
-parser.add_argument('--amean', help='mean squared error', nargs=2, type=str, type=str)
-parser.add_argument('--load', help='loads an image from a given path', required=True)
-parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', required=True)
+parser.add_argument('--mse', help='mean squared error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
+parser.add_argument('--load', help='loads an image from a given path')
+parser.add_argument('--save', help='saves edited image in a specified folder under a specified name')
 
 args = parser.parse_args()
 
 if args.load:
     imgPath = args.load
-    image = Image.open(imgPath)
-    arr = np.array(image.getdata())
-    if arr.ndim == 1: #grayscale
-        numColorChannels = 1
-        arr = arr.reshape(image.size[1], image.size[0])
-    else:
-        numColorChannels = arr.shape[1]
-        arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
+    arr = loadImg(imgPath)
 
-if args.brightness:
+
+if args.brightness and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.brightness:
     value = args.brightness
     brightness(arr, value)
 
-if args.contrast:
+if args.contrast and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.contrast:
     value = args.contrast
     contrast(arr, value)
 
-if args.negative:
+if args.negative and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.negative:
     negative(arr)
 
-if args.hflip:
+if args.hflip and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.hflip:
     hflip(arr)
         
-if args.vflip:
+if args.vflip and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.vflip:
     vflip(arr)
 
-if args.dflip:
+if args.dflip and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.dflip:
     dflip(arr)
 
-if args.mid:
+if args.mid and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.mid:
     value = args.mid
     arr = mid(arr, value)
 
-if args.amean:
+if args.amean and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.amean:
     value = args.amean
     arr = amean(arr, value)
+
+if args.mse:
+    original = loadImg(args.mse[0])
+    noise = loadImg(args.mse[1])
+    filtered = loadImg(args.mse[2])
+    mse(original, noise, filtered)
 
 if args.save:
     newImage = Image.fromarray(arr.astype(np.uint8))
