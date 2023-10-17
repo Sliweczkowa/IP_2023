@@ -14,6 +14,7 @@ def loadImg(path):
         arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
     return arr
 
+
 # B1 | Image brightness modification
 # to improve while saturated
 def brightness(array, num):
@@ -182,6 +183,7 @@ def sqd_dif_sum(img1, img2):
     sum = np.sum(sqd_dif)
     return sum
 
+
 # E1 | Mean square error
 def mse(org_img, noise_img, fil_img):
     height = len(org_img[0])
@@ -197,6 +199,7 @@ def mse(org_img, noise_img, fil_img):
 
     return err_org_noise, err_org_fil
 
+
 # E2 | Peak mean square error
 def pmse(org_img, noise_img, fil_img):
     max_org_img = np.max(org_img)
@@ -211,6 +214,7 @@ def pmse(org_img, noise_img, fil_img):
 
     return err_org_fil, err_org_noise
 
+
 # E3 | Signal to noise ratio
 # E4 | Peak signal to noise ratio
 # E5 | Maximum difference
@@ -222,7 +226,7 @@ def md(org_img, noise_img, fil_img):
     #original and noise
     err_org_noise = np.max(np.absolute(org_img - noise_img))
 
-    return  err_org_fil, err_org_noise
+    return err_org_fil, err_org_noise
 
 
 # main
