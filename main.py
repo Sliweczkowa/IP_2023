@@ -77,15 +77,33 @@ def dflip(array):
     return array
 
 
-# G4/G5 | Image shrinking/enlargement
-def resize(array0, width1, height1):
+# # G4/G5 | Image shrinking/enlargement using width and height
+# def resize(array0, width1, height1):
+#     width0 = len(array0)
+#     height0 = len(array0[0])
+#
+#     if width1 == 0:
+#         width1 = int(width0 * height1 / height0)
+#     elif height1 == 0:
+#         height1 = int(height0 * width1 / width0)
+#
+#     if array0.ndim == 2:
+#         array1 = np.empty([height1, width1])
+#     elif array0.ndim == 3:
+#         array1 = np.empty([height1, width1, 3])
+#     for h in range(width1):
+#         for w in range(height1):
+#             array1[w][h] = array0[int(width0 * w / width1)][int(height0 * h / height1)]
+#     return array1
+
+
+# G4 | Image enlargement using scale
+def enlarge(array0, scale):
     width0 = len(array0)
     height0 = len(array0[0])
 
-    if width1 == 0:
-        width1 = int(width0 * height1 / height0)
-    elif height1 == 0:
-        height1 = int(height0 * width1 / width0)
+    width1 = width0 * scale
+    height1 = height0 * scale
 
     if array0.ndim == 2:
         array1 = np.empty([height1, width1])
@@ -95,6 +113,11 @@ def resize(array0, width1, height1):
         for w in range(height1):
             array1[w][h] = array0[int(width0 * w / width1)][int(height0 * h / height1)]
     return array1
+
+
+# G5 | Image shrinking using scale
+def shrink(array, scale):
+    return enlarge(array, 1 / scale)
 
 
 # N4.1 | Midpoint filter
@@ -159,14 +182,14 @@ def sqd_dif_sum(img1, img2):
     sum = np.sum(sqd_dif)
     return sum
 
-# E1 | Mean square error 
+# E1 | Mean square error
 def mse(org_img, noise_img, fil_img):
     height = len(org_img[0])
     width = len(org_img)
 
     #original and filtered
     sum_org_fil = sqd_dif_sum(org_img, fil_img)
-    err_org_fil = sum_org_fil / (width*height) 
+    err_org_fil = sum_org_fil / (width*height)
 
     #original and noise
     sum_org_noise = sqd_dif_sum(org_img, noise_img)
@@ -174,7 +197,7 @@ def mse(org_img, noise_img, fil_img):
 
     return err_org_noise, err_org_fil
 
-# E2 | Peak mean square error 
+# E2 | Peak mean square error
 def pmse(org_img, noise_img, fil_img):
     max_org_img = np.max(org_img)
 
@@ -188,8 +211,8 @@ def pmse(org_img, noise_img, fil_img):
 
     return err_org_fil, err_org_noise
 
-# E3 | Signal to noise ratio 
-# E4 | Peak signal to noise ratio 
+# E3 | Signal to noise ratio
+# E4 | Peak signal to noise ratio
 # E5 | Maximum difference
 def md(org_img, noise_img, fil_img):
 
@@ -213,6 +236,8 @@ parser.add_argument('--negative', help='negative of the image', action="store_tr
 parser.add_argument('--hflip', help='horizontal flip', action="store_true")
 parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
+parser.add_argument('--shrink', help='image shrinking', action="store_true")
+parser.add_argument('--enlarge', help='image enlargement', action="store_true")
 parser.add_argument('--mid', help='midpoint filter', type=int)
 parser.add_argument('--amean', help='arithmetic mean filter', type=int)
 parser.add_argument('--mse', help='mean squared error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
@@ -259,6 +284,18 @@ if args.dflip and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.dflip:
     dflip(arr)
+
+if args.shrink and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.shrink:
+    value = args.shrink
+    arr = shrink(arr, value)
+
+if args.enlarge and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.enlarge:
+    value = args.enlarge
+    arr = enlarge(arr, value)
 
 if args.mid and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
