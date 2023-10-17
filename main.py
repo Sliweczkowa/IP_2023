@@ -16,7 +16,6 @@ def loadImg(path):
 
 
 # B1 | Image brightness modification
-# to improve while saturated
 def brightness(array, num):
     for xIndex, x in enumerate(array):
         for yIndex, y in enumerate(x):
@@ -30,7 +29,6 @@ def brightness(array, num):
 
 
 # B2 | Image contrast modification
-# to improve while saturated
 def contrast(array, num):
     num /= 2
     for xIndex, x in enumerate(array):
@@ -76,26 +74,6 @@ def vflip(array):
 def dflip(array):
     vflip(hflip(array))
     return array
-
-
-# # G4/G5 | Image shrinking/enlargement using width and height
-# def resize(array0, width1, height1):
-#     width0 = len(array0)
-#     height0 = len(array0[0])
-#
-#     if width1 == 0:
-#         width1 = int(width0 * height1 / height0)
-#     elif height1 == 0:
-#         height1 = int(height0 * width1 / width0)
-#
-#     if array0.ndim == 2:
-#         array1 = np.empty([height1, width1])
-#     elif array0.ndim == 3:
-#         array1 = np.empty([height1, width1, 3])
-#     for h in range(width1):
-#         for w in range(height1):
-#             array1[w][h] = array0[int(width0 * w / width1)][int(height0 * h / height1)]
-#     return array1
 
 
 # G4 | Image enlargement using scale
@@ -255,7 +233,6 @@ args = parser.parse_args()
 if args.load:
     imgPath = args.load
     arr = loadImg(imgPath)
-
 
 if args.brightness and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
