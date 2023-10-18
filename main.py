@@ -155,7 +155,7 @@ def amean(array, size):
     return filtered_array
 
 
-# squared differences sum
+# Squared differences sum
 def sqd_dif_sum(img1, img2):
     sqd_dif = np.square(img1 - img2)
     sum = np.sum(sqd_dif)
@@ -193,8 +193,36 @@ def pmse(org_img, noise_img, fil_img):
     return err_org_fil, err_org_noise
 
 
-# E3 | Signal to noise ratio
-# E4 | Peak signal to noise ratio
+# E3 | Signal to noise ratio [dB]
+def snr(org_img, noise_img, fil_img):
+
+    # squared sum
+    sqd_sum = np.sum(np.square(org_img))
+
+    # original and filtered
+    fil_x = 10 * np.log10(sqd_sum / sqd_dif_sum(org_img, fil_img))
+
+    # original and noise
+    noise_x = 10 * np.log10(sqd_sum / sqd_dif_sum(org_img, noise_img))
+
+    return fil_x, noise_x
+
+
+# E4 | Peak signal to noise ratio [dB]
+def psnr(org_img, noise_img, fil_img):
+
+    # squared max sum
+    sqd_max_sum = np.sum(np.square(np.max(org_img)))
+
+    # original and filtered
+    fil_x = 10 * np.log10(sqd_max_sum / sqd_dif_sum(org_img, fil_img))
+
+    # original and noise
+    noise_x = 10 * np.log10(sqd_max_sum / sqd_dif_sum(org_img, noise_img))
+
+    return fil_x, noise_x
+
+
 # E5 | Maximum difference
 def md(org_img, noise_img, fil_img):
 
@@ -224,6 +252,8 @@ parser.add_argument('--mid', help='midpoint filter', type=int)
 parser.add_argument('--amean', help='arithmetic mean filter', type=int)
 parser.add_argument('--mse', help='mean squared error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
 parser.add_argument('--pmse', help='peak mean squared error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
+parser.add_argument('--snr', help='signal to noise ratio, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
+parser.add_argument('--psnr', help='peak signal to noise ratio, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
 parser.add_argument('--md', help='maximum difference error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
 parser.add_argument('--load', help='loads an image from a given path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name')
@@ -302,6 +332,20 @@ if args.pmse:
     noise = loadImg(args.pmse[1])
     filtered = loadImg(args.pmse[2])
     result = pmse(original, noise, filtered)
+    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
+
+if args.snr:
+    original = loadImg(args.snr[0])
+    noise = loadImg(args.snr[1])
+    filtered = loadImg(args.snr[2])
+    result = snr(original, noise, filtered)
+    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
+
+if args.psnr:
+    original = loadImg(args.psnr[0])
+    noise = loadImg(args.psnr[1])
+    filtered = loadImg(args.psnr[2])
+    result = psnr(original, noise, filtered)
     print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
 
 if args.md:
