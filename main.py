@@ -100,11 +100,11 @@ def dflip(array):
 
 # G4 | Image enlargement using scale
 def enlarge(array0, scale):
-    width0 = len(array0)
-    height0 = len(array0[0])
+    height0 = len(array0)
+    width0 = len(array0[0])
 
-    width1 = width0 * scale
-    height1 = height0 * scale
+    width1 = int(width0 * scale)
+    height1 = int(height0 * scale)
 
     if array0.ndim == 2:
         array1 = np.empty([height1, width1])
@@ -118,13 +118,13 @@ def enlarge(array0, scale):
 
 # G5 | Image shrinking using scale
 def shrink(array, scale):
-    return enlarge(array, 1 / scale)
+    return enlarge(array, (1 / scale))
 
 
 # N4.1 | Midpoint filter
 def mid(array, size):
-    height = len(array[0])
-    width = len(array)
+    height = len(array)
+    width = len(array[0])
 
     border = size // 2
 
@@ -151,8 +151,8 @@ def mid(array, size):
 
 # N4.2 | Arithmetic mean filter
 def amean(array, size):
-    height = len(array[0])
-    width = len(array)
+    height = len(array)
+    width = len(array[0])
 
     border = size // 2
 
