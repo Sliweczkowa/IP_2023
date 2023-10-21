@@ -7,10 +7,10 @@ import sys
 def loadImg(path):
     image = Image.open(path)
     arr = np.array(image.getdata())
-    if arr.ndim == 1: #grayscale
+    if arr.ndim == 1: 
         numColorChannels = 1
         arr = arr.reshape(image.size[1], image.size[0])
-    else:
+    elif arr.ndim == 2:
         numColorChannels = arr.shape[1]
         arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
     return arr
@@ -44,8 +44,6 @@ def brightness(array, num):
 # B2 | Image contrast modification
 def contrast(array, num):
 
-    num /= 2
-
     if array.ndim == 2:
         for xIndex, x in enumerate(array):
             for yIndex, y in enumerate(x):
@@ -70,11 +68,7 @@ def negative(array):
 
 # G1 | Horizontal flip
 def hflip(array):
-    i = 0
-    for y in array:
-        while len(y) / 2 > i:
-            array[:, [i, len(y) - 1 - i]] = array[:, [len(y) - 1 - i, i]]
-            i += 1
+    array[:] = array[:, ::-1]
     return array
 
 
