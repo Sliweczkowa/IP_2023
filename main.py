@@ -74,16 +74,7 @@ def hflip(array):
 
 # G2 | Vertical flip
 def vflip(array):
-
-    height = len(array)
-
-    for i in range(height // 2):
-        top_row = array[i, :].copy()
-        bottom_row = array[height - 1 - i, :].copy()
-
-        array[i, :] = bottom_row
-        array[height - 1 - i, :] = top_row
-        
+    array[:] = array[::-1, :]
     return array
 
 
