@@ -79,11 +79,16 @@ def hflip(array):
 
 # G2 | Vertical flip
 def vflip(array):
-    i = 0
-    for x in array:
-        while len(x) / 2 > i:
-            array[[i, len(x) - 1 - i], :] = array[[len(x) - 1 - i, i], :]
-            i += 1
+
+    height = len(array)
+
+    for i in range(height // 2):
+        top_row = array[i, :].copy()
+        bottom_row = array[height - 1 - i, :].copy()
+
+        array[i, :] = bottom_row
+        array[height - 1 - i, :] = top_row
+        
     return array
 
 
@@ -263,8 +268,8 @@ parser.add_argument('--negative', help='negative of the image', action="store_tr
 parser.add_argument('--hflip', help='horizontal flip', action="store_true")
 parser.add_argument('--vflip', help='vertical flip', action="store_true")
 parser.add_argument('--dflip', help='diagonal flip', action="store_true")
-parser.add_argument('--shrink', help='image shrinking', action="store_true")
-parser.add_argument('--enlarge', help='image enlargement', action="store_true")
+parser.add_argument('--shrink', help='image shrinking', type=int)
+parser.add_argument('--enlarge', help='image enlargement', type=int)
 parser.add_argument('--mid', help='midpoint filter', type=int)
 parser.add_argument('--amean', help='arithmetic mean filter', type=int)
 parser.add_argument('--mse', help='mean squared error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3)
