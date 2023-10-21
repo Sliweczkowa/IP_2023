@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 import argparse
+import sys
 
 
 def loadImg(path):
@@ -283,8 +284,12 @@ parser.add_argument('--save', help='saves edited image in a specified folder und
 args = parser.parse_args()
 
 if args.load:
-    imgPath = args.load
-    arr = loadImg(imgPath)
+    try:
+        imgPath = args.load
+        arr = loadImg(imgPath)
+    except (IOError, ValueError, FileNotFoundError) as e:
+        print(f"Error: Unable to load the image. Please check the file extension and try again.")
+        sys.exit(1)
 
 if args.brightness and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
@@ -378,6 +383,9 @@ if args.md:
     print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
 
 if args.save:
-    newImage = Image.fromarray(arr.astype(np.uint8))
-    newImage.save(args.save)
-    newImage.show()
+    try:
+        newImage = Image.fromarray(arr.astype(np.uint8))
+        newImage.save(args.save)
+        newImage.show()
+    except (IOError, ValueError) as e:
+        print(f"Error: Unable to save the image. Please check the file extension and try again.")
