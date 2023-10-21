@@ -17,14 +17,26 @@ def loadImg(path):
 
 # B1 | Image brightness modification
 def brightness(array, num):
-    for xIndex, x in enumerate(array):
-        for yIndex, y in enumerate(x):
-            if y + num >= 255:
-                array[xIndex][yIndex] = 255
-            elif y + num <= 0:
-                array[xIndex][yIndex] = 0
-            else:
-                array[xIndex][yIndex] = y + num
+    if array.ndim == 1:
+        for xIndex, x in enumerate(array):
+            for yIndex, y in enumerate(x):
+                if y + num >= 255:
+                    array[xIndex][yIndex] = 255
+                elif y + num <= 0:
+                    array[xIndex][yIndex] = 0
+                else:
+                    array[xIndex][yIndex] = y + num
+    elif array.ndim  == 3:
+        for xIndex, x in enumerate(array):
+            for yIndex, y in enumerate(x):
+                for c in range(3):
+                    if y[c] + num >= 255:
+                        array[xIndex][yIndex][c] = 255
+                    elif y[c] + num <= 0:
+                        array[xIndex][yIndex][c] = 0
+                    else:
+                        array[xIndex][yIndex][c] = y[c] + num
+
     return array
 
 
