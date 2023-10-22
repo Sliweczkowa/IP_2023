@@ -208,10 +208,10 @@ def snr(org_img, noise_img, fil_img):
     sqd_sum = np.sum(np.square(org_img))
 
     # original and filtered
-    fil_x = 10 * np.log10(sqd_sum / sqd_dif_sum(org_img, fil_img))
+    fil_x = 10 * np.log10(abs(sqd_sum / sqd_dif_sum(org_img, fil_img)))
 
     # original and noise
-    noise_x = 10 * np.log10(sqd_sum / sqd_dif_sum(org_img, noise_img))
+    noise_x = 10 * np.log10(abs(sqd_sum / sqd_dif_sum(org_img, noise_img)))
 
     return fil_x, noise_x
 
@@ -223,10 +223,10 @@ def psnr(org_img, noise_img, fil_img):
     sqd_max_sum = np.sum(np.square(np.max(org_img)))
 
     # original and filtered
-    fil_x = 10 * np.log10(sqd_max_sum / sqd_dif_sum(org_img, fil_img))
+    fil_x = 10 * np.log10(abs(sqd_max_sum / sqd_dif_sum(org_img, fil_img)))
 
     # original and noise
-    noise_x = 10 * np.log10(sqd_max_sum / sqd_dif_sum(org_img, noise_img))
+    noise_x = 10 * np.log10(abs(sqd_max_sum / sqd_dif_sum(org_img, noise_img)))
 
     return fil_x, noise_x
 
