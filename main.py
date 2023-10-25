@@ -48,14 +48,14 @@ def contrast(array, num):
         for xIndex, x in enumerate(array):
             for yIndex, y in enumerate(x):
                 current_pixel = array[xIndex][yIndex]
-                new_pixel = (current_pixel - 127.5) * num + 127.5
+                new_pixel = pow((current_pixel / 255), num) * 255
                 array[xIndex][yIndex] = np.clip(new_pixel, 0, 255)
     elif array.ndim == 3:
         for xIndex, x in enumerate(array):
             for yIndex, y in enumerate(x):
                 for c in range(3):
                     current_pixel = array[xIndex][yIndex][c]
-                    new_pixel = (current_pixel - 127.5) * num + 127.5
+                    new_pixel = pow((current_pixel / 255), num) * 255
                     array[xIndex][yIndex][c] = np.clip(new_pixel, 0, 255)
     return array
 
