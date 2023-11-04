@@ -2,11 +2,13 @@ from PIL import Image
 import numpy as np
 import argparse
 import sys
+import matplotlib.pyplot as plt
 
 from task1 import elementary            # B1-B3
 from task1 import geometric             # G1-G5
 from task1 import noise_removal         # N4
 from task1 import similarity_measures   # E1-E5
+from task2 import histogram             # H
 
 
 def loadImg(path):
@@ -23,6 +25,7 @@ def loadImg(path):
 
 # main
 value = 0
+is_histogram = 0
 imgPath = ""
 
 parser = argparse.ArgumentParser()
@@ -41,6 +44,7 @@ parser.add_argument('--pmse', help='peak mean squared error, arg1=original image
 parser.add_argument('--snr', help='signal to noise ratio, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--psnr', help='peak signal to noise ratio, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--md', help='maximum difference error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
+parser.add_argument('--histogram', help='generates a histogram of a chosen image', action="store_true")
 parser.add_argument('--load', help='loads an image from a given path', metavar=('Path'))
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar=('Path'))
 
@@ -145,10 +149,21 @@ if args.md:
     result = similarity_measures.md(original, noise, filtered)
     print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
 
+if args.histogram and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+else:    
+    histogramImg = histogram.histogram_f(arr, 0)
+    is_histogram = 1
+
 if args.save:
     try:
-        newImage = Image.fromarray(arr.astype(np.uint8))
-        newImage.save(args.save)
-        newImage.show()
+        print(is_histogram)
+        if is_histogram == 1:
+            histogramImg.savefig(args.save)
+            plt.show()
+        elif is_histogram != 1:
+            newImage = Image.fromarray(arr.astype(np.uint8))
+            newImage.save(args.save)
+            newImage.show()
     except (IOError, ValueError) as e:
         print(f"Error: Unable to save the image. Please check the file extension and try again.")
