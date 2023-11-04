@@ -152,7 +152,7 @@ if args.md:
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 else:    
-    histogramImg = histogram.histogram_f(arr, 0)
+    histogramImg = histogram.histogram_f(arr, "R")
     is_histogram = 1
 
 if args.save:
