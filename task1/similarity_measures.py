@@ -77,13 +77,15 @@ def snr(org_img, noise_img, fil_img):
 
 # E4 | Peak signal to noise ratio [dB]
 def psnr(org_img, noise_img, fil_img):
+    height = len(org_img[0])
+    width = len(org_img)
 
     org_img = org_img.astype(np.float32)
     noise_img = noise_img.astype(np.float32)
     fil_img = fil_img.astype(np.float32)
 
     # squared max sum
-    sqd_max_sum = np.sum(np.square(np.max(org_img)))
+    sqd_max_sum = width* height * (np.max(org_img)**2)
 
     # original and filtered
     fil_x = 10 * np.log10((sqd_max_sum / (sqd_dif_sum(org_img, fil_img))))
