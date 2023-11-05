@@ -1,7 +1,4 @@
-from PIL import Image
 import numpy as np
-import argparse
-import sys
 
 
 # B1 | Image brightness modification
