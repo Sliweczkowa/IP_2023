@@ -16,15 +16,34 @@ def mse(org_img, noise_img, fil_img):
     height = len(org_img[0])
     width = len(org_img)
 
-    #original and filtered
-    sum_org_fil = sqd_dif_sum(org_img, fil_img)
-    err_org_fil = sum_org_fil / (width*height)
+    if org_img.ndim == 2:
 
-    #original and noise
-    sum_org_noise = sqd_dif_sum(org_img, noise_img)
-    err_org_noise = sum_org_noise / (width*height)
+        #original and filtered
+        sum_org_fil = sqd_dif_sum(org_img, fil_img)
+        err_org_fil = sum_org_fil / (width*height)
 
-    return err_org_noise, err_org_fil
+        #original and noise
+        sum_org_noise = sqd_dif_sum(org_img, noise_img)
+        err_org_noise = sum_org_noise / (width*height)
+
+        return err_org_noise, err_org_fil
+
+    if org_img.ndim == 3:
+        #original and filtered
+        err_org_fil_r = (sqd_dif_sum(org_img[:,:,0], fil_img[:,:,0])) / (width*height)
+        err_org_fil_g = (sqd_dif_sum(org_img[:,:,1], fil_img[:,:,1])) / (width*height)
+        err_org_fil_b = (sqd_dif_sum(org_img[:,:,2], fil_img[:,:,2])) / (width*height)
+
+        #original and noise
+        err_org_noise_r = (sqd_dif_sum(org_img[:,:,0], noise_img[:,:,0])) / (width*height)
+        err_org_noise_g = (sqd_dif_sum(org_img[:,:,1], noise_img[:,:,1])) / (width*height)
+        err_org_noise_b = (sqd_dif_sum(org_img[:,:,2], noise_img[:,:,2])) / (width*height)
+
+        err_org_noise = (err_org_noise_r, err_org_noise_g, err_org_noise_b)
+        err_org_fil = (err_org_fil_r, err_org_fil_g, err_org_fil_b)
+
+        return err_org_noise, err_org_fil
+        
 
 
 # E2 | Peak mean square error

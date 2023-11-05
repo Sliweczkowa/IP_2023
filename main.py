@@ -44,7 +44,7 @@ parser.add_argument('--pmse', help='peak mean squared error, arg1=original image
 parser.add_argument('--snr', help='signal to noise ratio, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--psnr', help='peak signal to noise ratio, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--md', help='maximum difference error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
-parser.add_argument('--histogram', help='generates a histogram of a chosen image', action="store_true")
+parser.add_argument('--histogram', help='generates a histogram for a chosen chanel of a chosen image', type=str, metavar="Channel (R/G/B/greyscale)")
 parser.add_argument('--load', help='loads an image from a given path', metavar=('Path'))
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar=('Path'))
 
@@ -119,45 +119,44 @@ if args.mse:
     noise = loadImg(args.mse[1])
     filtered = loadImg(args.mse[2])
     result = similarity_measures.mse(original, noise, filtered)
-    print("original/noise: " + str(result[0]) + ", original/filter: " + str(result[1]))
+    print("original/noise (greyscale or R,G,B): " + str(result[0]) + ", original/filter(greyscale or R,G,B): " + str(result[1]))
 
 if args.pmse:
     original = loadImg(args.pmse[0])
     noise = loadImg(args.pmse[1])
     filtered = loadImg(args.pmse[2])
     result = similarity_measures.pmse(original, noise, filtered)
-    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
+    print("original/noise (greyscale or R,G,B): " + str(result[1]) + ", original/filter (greyscale or R,G,B): " + str(result[0]))
 
 if args.snr:
     original = loadImg(args.snr[0])
     noise = loadImg(args.snr[1])
     filtered = loadImg(args.snr[2])
     result = similarity_measures.snr(original, noise, filtered)
-    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
+    print("original/noise (greyscale or R,G,B): " + str(result[1]) + ", original/filter (greyscale or R,G,B): " + str(result[0]))
 
 if args.psnr:
     original = loadImg(args.psnr[0])
     noise = loadImg(args.psnr[1])
     filtered = loadImg(args.psnr[2])
     result = similarity_measures.psnr(original, noise, filtered)
-    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
+    print("original/noise (greyscale or R,G,B): " + str(result[1]) + ", original/filter (greyscale or R,G,B): " + str(result[0]))
 
 if args.md:
     original = loadImg(args.md[0])
     noise = loadImg(args.md[1])
     filtered = loadImg(args.md[2])
     result = similarity_measures.md(original, noise, filtered)
-    print("original/noise: " + str(result[1]) + ", original/filter: " + str(result[0]))
+    print("original/noise (greyscale or R,G,B): " + str(result[1]) + ", original/filter (greyscale or R,G,B): " + str(result[0]))
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
-else:    
-    histogramImg = histogram.histogram_f(arr, "R")
+elif args.histogram:
+    histogramImg = histogram.histogram_f(arr, args.histogram)
     is_histogram = 1
 
 if args.save:
     try:
-        print(is_histogram)
         if is_histogram == 1:
             histogramImg.savefig(args.save)
             plt.show()
