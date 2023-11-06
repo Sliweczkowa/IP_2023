@@ -66,11 +66,31 @@ def snr(org_img, noise_img, fil_img):
 
     sqd_sum = np.sum(np.square(org_img))
 
-    # original and filtered
-    fil_x = 10 * np.log10(sqd_sum / (sqd_dif_sum(org_img, fil_img)))
+    if org_img.ndim == 2:
+        # original and filtered
+        fil_x = 10 * np.log10(sqd_sum / (sqd_dif_sum(org_img, fil_img)))
 
-    # original and noise
-    noise_x = 10 * np.log10(sqd_sum / (sqd_dif_sum(org_img, noise_img)))
+        # original and noise
+        noise_x = 10 * np.log10(sqd_sum / (sqd_dif_sum(org_img, noise_img)))
+
+    if org_img.ndim == 3:
+
+        sqd_sum_r = np.sum(np.square(org_img[:,:,0]))
+        sqd_sum_g = np.sum(np.square(org_img[:,:,1]))
+        sqd_sum_b = np.sum(np.square(org_img[:,:,2]))
+
+        # original and filtered
+        fil_x_r = 10 * np.log10(sqd_sum_r / (sqd_dif_sum(org_img[:,:,0], fil_img[:,:,0])))
+        fil_x_g = 10 * np.log10(sqd_sum_g / (sqd_dif_sum(org_img[:,:,1], fil_img[:,:,1])))
+        fil_x_b = 10 * np.log10(sqd_sum_b / (sqd_dif_sum(org_img[:,:,2], fil_img[:,:,2])))
+
+        # original and noise
+        noise_x_r = 10 * np.log10(sqd_sum_r / (sqd_dif_sum(org_img[:,:,0], noise_img[:,:,0])))
+        noise_x_g = 10 * np.log10(sqd_sum_g / (sqd_dif_sum(org_img[:,:,1], noise_img[:,:,1])))
+        noise_x_b = 10 * np.log10(sqd_sum_b / (sqd_dif_sum(org_img[:,:,2], noise_img[:,:,2])))
+
+        fil_x = (fil_x_r, fil_x_g, fil_x_b)
+        noise_x = (noise_x_r, noise_x_g, noise_x_b)
 
     return fil_x, noise_x
 
