@@ -45,6 +45,7 @@ parser.add_argument('--snr', help='signal to noise ratio, arg1=original image, a
 parser.add_argument('--psnr', help='peak signal to noise ratio, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--md', help='maximum difference error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--histogram', help='generates a histogram for a chosen chanel of a chosen image', type=str, metavar="Channel (R/G/B/greyscale)")
+parser.add_argument('--huniform', help='Uniform final probability density function', nargs=2, type=int, metavar=('new minimum brightness', 'new maximum brightness'))
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -149,6 +150,13 @@ if args.md:
     result = similarity_measures.md(original, noise, filtered)
     print("original/noise (greyscale or R,G,B): " + str(result[1]) + ", original/filter (greyscale or R,G,B): " + str(result[0]))
 
+if args.huniform and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.huniform:
+    new_min = args.huniform[0]
+    new_max = args.huniform[1]
+    arr = histogram.huniform(arr, new_min, new_max)
+
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.histogram:
@@ -158,7 +166,7 @@ elif args.histogram:
 if args.save:
     try:
         if is_histogram == 1:
-            histogramImg.savefig(args.save)
+            histogramImg[0].savefig(args.save)
             plt.show()
         elif is_histogram != 1:
             newImage = Image.fromarray(arr.astype(np.uint8))
