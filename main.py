@@ -8,7 +8,8 @@ from task1 import elementary            # B1-B3
 from task1 import geometric             # G1-G5
 from task1 import noise_removal         # N4
 from task1 import similarity_measures   # E1-E5
-from task2 import histogram             # H
+from task2 import histogram             # H1
+from task2 import image_characteristics # C1-C6
 
 
 def loadImg(path):
@@ -46,6 +47,9 @@ parser.add_argument('--psnr', help='peak signal to noise ratio, arg1=original im
 parser.add_argument('--md', help='maximum difference error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--histogram', help='generates a histogram for a chosen chanel of a chosen image', type=str, metavar="Channel (R/G/B/greyscale)")
 parser.add_argument('--huniform', help='Uniform final probability density function', nargs=2, type=int, metavar=('new minimum brightness', 'new maximum brightness'))
+parser.add_argument('--cmean', help='mean, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--cvariance', help='variance, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--cstdev', help='standard deviation, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -156,6 +160,30 @@ elif args.huniform:
     new_min = args.huniform[0]
     new_max = args.huniform[1]
     arr = histogram.huniform(arr, new_min, new_max)
+
+if args.cmean:
+    original = loadImg(args.cmean[0])
+    improved = loadImg(args.cmean[1])
+    brightness_lvl = int(args.cmean[2])
+    result_original = image_characteristics.cmean(original, brightness_lvl)
+    result_improved = image_characteristics.cmean(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.cvariance:
+    original = loadImg(args.cvariance[0])
+    improved = loadImg(args.cvariance[1])
+    brightness_lvl = int(args.cvariance[2])
+    result_original = image_characteristics.cvariance(original, brightness_lvl)
+    result_improved = image_characteristics.cvariance(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.cstdev:
+    original = loadImg(args.cstdev[0])
+    improved = loadImg(args.cstdev[1])
+    brightness_lvl = int(args.cstdev[2])
+    result_original = image_characteristics.cstdev(original, brightness_lvl)
+    result_improved = image_characteristics.cstdev(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
