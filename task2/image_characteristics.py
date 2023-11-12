@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 # image characteristics
 
@@ -89,6 +88,8 @@ def centropy(arr, levels):
     height = len(arr)
 
     histogram,bins = np.histogram(arr.ravel(), bins=levels, range=(0, levels-1))
-
+    epsilon = 1e-10
+    histogram = histogram + epsilon
+   
     b_e = -1 / (width * height) * np.sum(histogram * np.log2(histogram / (width * height)))
     return b_e

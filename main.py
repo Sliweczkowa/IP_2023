@@ -10,6 +10,7 @@ from task1 import noise_removal         # N4
 from task1 import similarity_measures   # E1-E5
 from task2 import histogram             # H1
 from task2 import image_characteristics # C1-C6
+from task2 import linear_img_filtration # S4
 
 
 def loadImg(path):
@@ -50,6 +51,13 @@ parser.add_argument('--huniform', help='Uniform final probability density functi
 parser.add_argument('--cmean', help='mean, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--cvariance', help='variance, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--cstdev', help='standard deviation, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--cvarcoi', help='variation coefficient I, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--casyco', help='asymmetry coefficient, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--cflaco', help='flattening coefficient, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--cvarcoii', help='variation coefficient II, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--centropy', help='information source entropy, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
+parser.add_argument('--sexdetii', help='Linear filtration in spatial domain (convolution) with extraction of details. Choices for convolution masks: S/SW/W/NW', metavar='convolution mask')
+parser.add_argument('--sexdetii2', help='Improved linear filtration in spatial domain (convolution) with extraction of details.', action="store_true")
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -184,6 +192,57 @@ if args.cstdev:
     result_original = image_characteristics.cstdev(original, brightness_lvl)
     result_improved = image_characteristics.cstdev(improved, brightness_lvl)
     print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.cvarcoi:
+    original = loadImg(args.cvarcoi[0])
+    improved = loadImg(args.cvarcoi[1])
+    brightness_lvl = int(args.cvarcoi[2])
+    result_original = image_characteristics.cvarcoi(original, brightness_lvl)
+    result_improved = image_characteristics.cvarcoi(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.casyco:
+    original = loadImg(args.casyco[0])
+    improved = loadImg(args.casyco[1])
+    brightness_lvl = int(args.casyco[2])
+    result_original = image_characteristics.casyco(original, brightness_lvl)
+    result_improved = image_characteristics.casyco(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.cflaco:
+    original = loadImg(args.cflaco[0])
+    improved = loadImg(args.cflaco[1])
+    brightness_lvl = int(args.cflaco[2])
+    result_original = image_characteristics.cflaco(original, brightness_lvl)
+    result_improved = image_characteristics.cflaco(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.cvarcoii:
+    original = loadImg(args.cvarcoii[0])
+    improved = loadImg(args.cvarcoii[1])
+    brightness_lvl = int(args.cvarcoii[2])
+    result_original = image_characteristics.cvarcoii(original, brightness_lvl)
+    result_improved = image_characteristics.cvarcoii(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.centropy:
+    original = loadImg(args.centropy[0])
+    improved = loadImg(args.centropy[1])
+    brightness_lvl = int(args.centropy[2])
+    result_original = image_characteristics.centropy(original, brightness_lvl)
+    result_improved = image_characteristics.centropy(improved, brightness_lvl)
+    print("original: " + str(result_original) + ", improved: " + str(result_improved))
+
+if args.sexdetii and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.sexdetii:
+    mask = args.sexdetii
+    arr = linear_img_filtration.sexdetii(arr, mask)
+
+if args.sexdetii2 and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.sexdetii2:
+    arr = linear_img_filtration.sexdetii2(arr)
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
