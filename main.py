@@ -10,7 +10,7 @@ from task1 import noise_removal         # N4
 from task1 import similarity_measures   # E1-E5
 from task2 import histogram             # H1
 from task2 import image_characteristics # C1-C6
-from task2 import linear_img_filtration # S4
+from task2 import image_filtration      # S4, O3
 
 
 def loadImg(path):
@@ -58,6 +58,7 @@ parser.add_argument('--cvarcoii', help='variation coefficient II, arg1=original 
 parser.add_argument('--centropy', help='information source entropy, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--sexdetii', help='Linear filtration in spatial domain (convolution) with extraction of details. Choices for convolution masks: S/SW/W/NW', metavar='convolution mask')
 parser.add_argument('--sexdetii2', help='Improved linear filtration in spatial domain (convolution) with extraction of details.', action="store_true")
+parser.add_argument('--osobel', help='Non-linear filtration in spatial domain. Sobel operator.', action="store_true")
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -237,12 +238,17 @@ if args.sexdetii and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.sexdetii:
     mask = args.sexdetii
-    arr = linear_img_filtration.sexdetii(arr, mask)
+    arr = image_filtration.sexdetii(arr, mask)
 
 if args.sexdetii2 and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.sexdetii2:
-    arr = linear_img_filtration.sexdetii2(arr)
+    arr = image_filtration.sexdetii2(arr)
+
+if args.osobel and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.osobel:
+    arr = image_filtration.osobel(arr)
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")

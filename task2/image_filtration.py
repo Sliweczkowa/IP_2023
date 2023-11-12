@@ -58,3 +58,28 @@ def sexdetii2(arr):
         result[:, Q - 1 + i] = arr[:, Q - 1 + i]
 
     return result
+
+# O3 | Sobel operator
+
+def osobel(arr):
+    P = len(arr)
+    Q = len(arr[0])
+
+    border = 1
+
+    result = np.zeros_like(arr)
+
+    for p in range(border, P-border):
+        for q in range(border, Q-border):
+            neighborhood = arr[p - border: p + border + 1, q - border: q + border + 1]
+            X = (neighborhood[0, 2] + 2 * neighborhood[1, 2] + neighborhood[2,2]) - (neighborhood[0,0] + 2 * neighborhood[1,0] + neighborhood[2,0])
+            Y = (neighborhood[0,0] + 2 * neighborhood[0,1]+ neighborhood[0,2]) - (neighborhood[2,0] + 2 * neighborhood[2,1] + neighborhood[2,2])
+            result[p,q] = np.sqrt(np.square(X)+np.square(Y))
+
+    for i in range(border):
+        result[i, :] = arr[i, :]
+        result[P - border + i, :] = arr[P - border + i, :]
+        result[:, i] = arr[:, i]
+        result[:, Q - border + i] = arr[:, Q - border + i]
+
+    return result
