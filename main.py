@@ -4,13 +4,14 @@ import argparse
 import sys
 import matplotlib.pyplot as plt
 
-from task1 import elementary            # B1-B3
-from task1 import geometric             # G1-G5
-from task1 import noise_removal         # N4
-from task1 import similarity_measures   # E1-E5
-from task2 import histogram             # H1
-from task2 import image_characteristics # C1-C6
-from task2 import image_filtration      # S4, O3
+from task1 import elementary                # B1-B3
+from task1 import geometric                 # G1-G5
+from task1 import noise_removal             # N4
+from task1 import similarity_measures       # E1-E5
+
+from task2 import histogram                 # H1
+from task2 import image_characteristics     # C1-C6
+from task2 import image_filtration          # S4, O3
 
 
 def loadImg(path):
