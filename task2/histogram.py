@@ -26,7 +26,6 @@ def histogram_f(array, channel):
 
 
 # H1 | Uniform final probability density function
-
 def huniform(arr, g_min, g_max):
     width = len(arr[0])
     height = len(arr)
@@ -39,5 +38,3 @@ def huniform(arr, g_min, g_max):
             new_arr[i, j] = g_min + (g_max-g_min) * (1/(height*width) * np.cumsum(histogram)[arr[i, j]])
 
     return new_arr
-
-        

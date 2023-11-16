@@ -4,7 +4,7 @@ import numpy as np
 # linear image filtration algorithm in spatial domain
 
 
-# S4.1
+# S4.1 | Extraction of details (S, SW, W, NW filters)
 def sexdetii(arr, mask):
     P = len(arr)
     Q = len(arr[0])
@@ -38,7 +38,7 @@ def sexdetii(arr, mask):
     return result
 
 
-# S4.2
+# S4.2 | Extraction of details (S, SW, W, NW filters)
 def sexdetii2(arr):
     P = len(arr)
     Q = len(arr[0])
