@@ -45,12 +45,12 @@ def cvarcoi(arr, levels):
     return b_z
 
 
-# C3 | Assymetry coefficient
+# C3 | Asymmetry coefficient
 def casyco(arr, levels):
     width = len(arr[0])
     height = len(arr)
 
-    histogram,bins = np.histogram(arr.ravel(), bins=levels, range=(0, levels-1))
+    histogram, bins = np.histogram(arr.ravel(), bins=levels, range=(0, levels-1))
 
     s = cstdev(arr, levels)
     b = cmean(arr, levels)
