@@ -43,27 +43,36 @@ def sexdetii(arr, mask):
 # S4.2
 
 def sexdetii2(arr: np.array):
-    P = len(arr)
-    Q = len(arr[0])
+    def sexdetii_opt(arr):
+        mask = np.array([[-1, -1, -1], [1, -2, 1], [1, 1, 1]])
 
-    h = np.array([[-1, -1, -1], [1, -2, 1], [1, 1, 1]])
+        maskH, maskW = mask.shape
+        arrH, arrW = arr.shape
+        h, w = arrH + 1 - maskH, arrW + 1 - maskW
 
-    result = np.zeros_like(arr)
+        filter1 = np.arange(maskW) + np.arange(h)[:, np.newaxis]
+
+        intermediate = arr[filter1]
+        intermediate = np.transpose(intermediate, (0,2,1))
+
+        filter2 = np.arange(maskH) + np.arange(w)[:, np.newaxis]
+
+        intermediate = intermediate[:, filter2]
+        intermediate = np.transpose(intermediate, (0,1,3,2))
+
+        product = intermediate * mask
+
+        return abs(product.sum(axis=(2,3)))
 
     if arr.ndim == 2:
-        for p in range(1, P-1):
-            for q in range(1, Q-1):
-                neighborhood = arr[p - 1: p + 2, q - 1: q + 2]
-                result[p,q] = abs(np.sum(neighborhood * h))
-    
-    elif arr.ndim == 3:
-        for c in range(3):
-            for p in range(1, P-1):
-                for q in range(1, Q-1):
-                    neighborhood = arr[p - 1: p + 2, q - 1: q + 2, c]
-                    result[p,q, c] = abs(np.sum(neighborhood * h))
+        result = sexdetii_opt(arr)
+    elif arr.ndim == 3: 
+        result = np.zeros((510, 510, 3))
+        result[:,:,0] = sexdetii_opt(arr[:,:,0])
+        result[:,:,1] = sexdetii_opt(arr[:,:,1])
+        result[:,:,2] = sexdetii_opt(arr[:,:,2])
 
-    return np.clip(result, 0, 255)
+    return np.clip(result,0,255)
 
 
 # O3 | Sobel operator
