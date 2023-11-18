@@ -94,7 +94,6 @@ def cflaco(arr, levels):
     width = len(arr[0])
     height = len(arr)
 
-
     if arr.ndim == 2:
         s = cstdev(arr, levels)
         b = cmean(arr, levels)
@@ -128,7 +127,7 @@ def cvarcoii(arr, levels):
     if arr.ndim == 3: 
         b_n = np.zeros(arr.shape[2])
         for c in range(3):
-            channnel_data=arr[:,:,c]
+            channnel_data = arr[:, :, c]
             histogram, bins = np.histogram(channnel_data.ravel(), bins=levels, range=(0, levels-1))
             b_n[c] = np.square(1 / (width * height)) * np.sum(np.square(histogram))
     return b_n
@@ -148,7 +147,7 @@ def centropy(arr, levels):
     elif arr.ndim == 3:
         b_e = np.zeros(arr.shape[2])
         for c in range(3):
-            channel_data = arr[:,:,c]
+            channel_data = arr[:, :, c]
             epsilon = 1e-10
             histogram, bins = np.histogram(channel_data.ravel(), bins=levels, range=(0, levels-1))
             histogram = histogram + epsilon

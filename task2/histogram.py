@@ -40,9 +40,9 @@ def huniform(arr, g_min, g_max):
                 new_arr[i, j] = g_min + (g_max-g_min) * (1/(height*width) * np.cumsum(histogram)[arr[i, j]])
 
     elif arr.ndim == 3:
-        histogram_r, bins = np.histogram(arr[:,:,0].ravel(), bins=256, range=(0, 255))
-        histogram_g, bins = np.histogram(arr[:,:,1].ravel(), bins=256, range=(0, 255))
-        histogram_b, bins = np.histogram(arr[:,:,2].ravel(), bins=256, range=(0, 255))
+        histogram_r, bins = np.histogram(arr[:, :, 0].ravel(), bins=256, range=(0, 255))
+        histogram_g, bins = np.histogram(arr[:, :, 1].ravel(), bins=256, range=(0, 255))
+        histogram_b, bins = np.histogram(arr[:, :, 2].ravel(), bins=256, range=(0, 255))
 
         histogram = (histogram_r, histogram_g, histogram_b)
 
