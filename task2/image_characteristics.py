@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 # image characteristics
@@ -154,3 +155,40 @@ def centropy(arr, levels):
             b_e[c] = -1 / (width * height) * np.sum(histogram * np.log2(histogram / (width * height)))
 
     return b_e
+
+
+# Generate image characteristics to Excel
+def hraport(original, improved, brightness_lvl):
+    # Prepares data
+    data = {
+        'Characteristic': ['(C1) Mean ',
+                           '(C1) Variance',
+                           '(C2) Standard deviation',
+                           '(C2) Variation coefficient I',
+                           '(C3) Asymmetry coefficient',
+                           '(C4) Flattening coefficient',
+                           '(C5) Variation coefficient II',
+                           '(C6) Information source entropy'],
+        'Values for original image': ['R: ' + str(np.around(cmean(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cmean(original, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cmean(original, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cvariance(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cvariance(original, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cvariance(original, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cstdev(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cstdev(original, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cstdev(original, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cvarcoi(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cvarcoi(original, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cvarcoi(original, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(casyco(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(casyco(original, brightness_lvl),4)[1]) + '\n' + 'B: ' + str(np.around(casyco(original, brightness_lvl),4)[2]),
+                                      'R: ' + str(np.around(cflaco(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cflaco(original, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cflaco(original, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cvarcoii(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cvarcoii(original, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cvarcoii(original, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(centropy(original, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(centropy(original, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(centropy(original, brightness_lvl), 4)[2])],
+        'Values for enhanced image': ['R: ' + str(np.around(cmean(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cmean(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cmean(improved, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cvariance(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cvariance(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cvariance(improved, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cstdev(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cstdev(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cstdev(improved, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cvarcoi(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cvarcoi(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cvarcoi(improved, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(casyco(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(casyco(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(casyco(improved, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cflaco(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cflaco(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cflaco(improved, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(cvarcoii(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(cvarcoii(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(cvarcoii(improved, brightness_lvl), 4)[2]),
+                                      'R: ' + str(np.around(centropy(improved, brightness_lvl), 4)[0]) + '\n' + 'G: ' + str(np.around(centropy(improved, brightness_lvl), 4)[1]) + '\n' + 'B: ' + str(np.around(centropy(improved, brightness_lvl), 4)[2])]
+    }
+
+    # Creates a DataFrame
+    df = pd.DataFrame(data)
+
+    # Exports df to Excel file
+    df.to_excel('report.xlsx', index=False)
