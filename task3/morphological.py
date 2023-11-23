@@ -54,3 +54,11 @@ def erosion(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
             else:
                 arrayNewImage[xArray, yArray] = 0
     return arrayNewImage
+
+
+def opening(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
+    return dilution(kernel, erosion(kernel, arrayImage))
+
+
+def closing(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
+    return erosion(kernel, dilution(kernel, arrayImage))
