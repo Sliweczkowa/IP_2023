@@ -1,6 +1,5 @@
 import numpy as np
 
-from task3 import structural_elements
 from task3.structural_elements import StructuralElement
 
 
@@ -25,16 +24,14 @@ def checkMatch(kernel: StructuralElement, arrayImage: np.ndarray) -> str:
         return 'some match'
 
 
-def dilution(arrayImage: np.ndarray) -> np.ndarray:
-    kernel = structural_elements.III
-
+def dilution(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
     # What to do with missing border? Crop?
 
     for xArray in range(kernel.origin[0], len(arrayImage) - len(kernel.array) - 1 + kernel.origin[0] + 1):
         for yArray in range(kernel.origin[1], len(arrayImage[0]) - 1 - len(kernel.array[0]) - 1 + kernel.origin[1] + 1):
-            arrayImagePart = arrayImage[xArray - len(kernel.array) // 2:xArray + (len(kernel.array) // 2) + 1,
-                             yArray - len(kernel.array) // 2:yArray + (len(kernel.array[0]) // 2) + 1]
+            arrayImagePart = arrayImage[xArray - kernel.origin[0]:xArray + len(kernel.array) - kernel.origin[0],
+                             yArray - kernel.origin[1]:yArray + len(kernel.array[0]) - kernel.origin[1]]
 
             if checkMatch(kernel, arrayImagePart) == 'no match':
                 arrayNewImage[xArray, yArray] = 0
@@ -43,16 +40,14 @@ def dilution(arrayImage: np.ndarray) -> np.ndarray:
     return arrayNewImage
 
 
-def erosion(arrayImage: np.ndarray) -> np.ndarray:
-    kernel = structural_elements.III
-
+def erosion(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
     # What to do with missing border? Crop?
 
     for xArray in range(kernel.origin[0], len(arrayImage) - len(kernel.array) - 1 + kernel.origin[0] + 1):
         for yArray in range(kernel.origin[1], len(arrayImage[0]) - 1 - len(kernel.array[0]) - 1 + kernel.origin[1] + 1):
-            arrayImagePart = arrayImage[xArray - len(kernel.array) // 2:xArray + (len(kernel.array) // 2) + 1,
-                             yArray - len(kernel.array) // 2:yArray + (len(kernel.array[0]) // 2) + 1]
+            arrayImagePart = arrayImage[xArray - kernel.origin[0]:xArray + len(kernel.array) - kernel.origin[0],
+                             yArray - kernel.origin[1]:yArray + len(kernel.array[0]) - kernel.origin[1]]
 
             if checkMatch(kernel, arrayImagePart) == 'perfect match':
                 arrayNewImage[xArray, yArray] = 255

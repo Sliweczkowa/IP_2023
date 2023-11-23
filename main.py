@@ -13,6 +13,10 @@ from task2 import histogram                 # H1
 from task2 import image_characteristics     # C1-C6
 from task2 import image_filtration          # S4, O3
 
+from task3 import morphological             # dilation, erosion, opening, closing, HMT transformation, M7
+from task3 import structural_elements
+from task3.structural_elements import StructuralElement
+
 
 def loadImg(path):
     image = Image.open(path)
