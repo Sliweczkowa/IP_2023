@@ -29,8 +29,6 @@ def checkMatch(kernel: StructuralElement, arrayImage: np.ndarray) -> str:
 def dilution(arrayImage: np.ndarray) -> np.ndarray:
     kernel = structural_elements.III
 
-    arr = [[i for i in range(10) for x in range(10)]]
-
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
     # What to do with missing border? Crop?
 
@@ -43,16 +41,11 @@ def dilution(arrayImage: np.ndarray) -> np.ndarray:
                 arrayNewImage[xArray, yArray] = 0
             else:
                 arrayNewImage[xArray, yArray] = 255
-
-    newImage = Image.fromarray(arrayNewImage.astype(bool))
-    newImage.show()
     return arrayNewImage
 
 
 def erosion(arrayImage: np.ndarray) -> np.ndarray:
     kernel = structural_elements.III
-
-    arr = [[i for i in range(10) for x in range(10)]]
 
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
     # What to do with missing border? Crop?
@@ -66,7 +59,4 @@ def erosion(arrayImage: np.ndarray) -> np.ndarray:
                 arrayNewImage[xArray, yArray] = 255
             else:
                 arrayNewImage[xArray, yArray] = 0
-
-    newImage = Image.fromarray(arrayNewImage.astype(bool))
-    newImage.show()
     return arrayNewImage
