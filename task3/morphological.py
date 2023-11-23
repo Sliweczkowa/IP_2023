@@ -1,5 +1,4 @@
 import numpy as np
-from PIL import Image
 
 from task3 import structural_elements
 from task3.structural_elements import StructuralElement
