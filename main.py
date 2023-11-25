@@ -59,11 +59,15 @@ parser.add_argument('--cstdev', help='standard deviation, arg1=original image, a
 parser.add_argument('--cvarcoi', help='variation coefficient I, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--casyco', help='asymmetry coefficient, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--cflaco', help='flattening coefficient, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
-parser.add_argument('--cvarcoii', help='variation coefficient II, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
-parser.add_argument('--centropy', help='information source entropy, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
-parser.add_argument('--sexdetii', help='Linear filtration in spatial domain (convolution) with extraction of details. Choices for convolution masks: S/SW/W/NW', metavar='convolution mask')
+parser.add_argument('--cvarcoii', help='variation coefficient II, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "[brightness levels]"))
+parser.add_argument('--centropy', help='information source entropy, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "[brightness levels]"))
+parser.add_argument('--sexdetii', help='Linear filtration in spatial domain (convolution) with extraction of details. Choices for convolution masks: S/SW/W/NW', metavar='[convolution mask]')
 parser.add_argument('--sexdetii2', help='Improved linear filtration in spatial domain (convolution) with extraction of details.', action="store_true")
 parser.add_argument('--osobel', help='Non-linear filtration in spatial domain. Sobel operator.', action="store_true")
+parser.add_argument('--dilation', help='Dilation', type=int, metavar="[Structural element (1-10)]")
+parser.add_argument('--erosion', help='Erosion', type=int, metavar="[Structural element (1-10)]")
+parser.add_argument('--opening', help='Opening', type=int, metavar="[Structural element (1-10)]")
+parser.add_argument('--closing', help='Closing', type=int, metavar="[Structural element (1-10)]")
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -254,6 +258,46 @@ if args.osobel and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.osobel:
     arr = image_filtration.osobel(arr)
+
+numberToStructural = {
+    1:structural_elements.I,
+    2:structural_elements.II,
+    3:structural_elements.III,
+    4:structural_elements.IV,
+    5:structural_elements.V, 
+    6:structural_elements.VI,
+    7:structural_elements.VII,
+    8:structural_elements.VIII,
+    9:structural_elements.IX,
+    10:structural_elements.X}
+
+if args.dilation and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.dilation and args.dilation not in range(1,11):
+    parser.error("incorrect number of structural element")
+elif args.dilation:
+    arr = morphological.dilation(numberToStructural[args.dilation], arr)
+
+if args.erosion and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.erosion and args.erosion not in range(1,11):
+    parser.error("incorrect number of structural element")
+elif args.erosion:
+    arr = morphological.erosion(numberToStructural[args.erosion], arr)
+
+if args.opening and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.opening and args.opening not in range(1,11):
+    parser.error("incorrect number of structural element")
+elif args.opening:
+    arr = morphological.opening(numberToStructural[args.opening], arr)
+
+if args.closing and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.closing and args.closing not in range(1,11):
+    parser.error("incorrect number of structural element")
+elif args.closing:
+    arr = morphological.closing(numberToStructural[args.closing], arr)
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")

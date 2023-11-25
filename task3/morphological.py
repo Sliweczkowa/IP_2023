@@ -24,7 +24,7 @@ def checkMatch(kernel: StructuralElement, arrayImage: np.ndarray) -> str:
         return 'some match'
 
 
-def dilution(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
+def dilation(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
     # What to do with missing border? Crop?
 
@@ -57,8 +57,8 @@ def erosion(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
 
 
 def opening(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
-    return dilution(kernel, erosion(kernel, arrayImage))
+    return dilation(kernel, erosion(kernel, arrayImage))
 
 
 def closing(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
-    return erosion(kernel, dilution(kernel, arrayImage))
+    return erosion(kernel, dilation(kernel, arrayImage))
