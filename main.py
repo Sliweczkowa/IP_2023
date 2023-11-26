@@ -68,6 +68,7 @@ parser.add_argument('--dilation', help='Dilation', type=int, metavar="[Structura
 parser.add_argument('--erosion', help='Erosion', type=int, metavar="[Structural element (1-10)]")
 parser.add_argument('--opening', help='Opening', type=int, metavar="[Structural element (1-10)]")
 parser.add_argument('--closing', help='Closing', type=int, metavar="[Structural element (1-10)]")
+parser.add_argument('--hmt', help='Hit and Miss Transform', type=int, metavar="[Structural element (1-12)]")
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -269,7 +270,9 @@ numberToStructural = {
     7:structural_elements.VII,
     8:structural_elements.VIII,
     9:structural_elements.IX,
-    10:structural_elements.X}
+    10:structural_elements.X,
+    11:structural_elements.XI,
+    12:structural_elements.XII}
 
 if args.dilation and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
@@ -298,6 +301,13 @@ elif args.closing and args.closing not in range(1,11):
     parser.error("incorrect number of structural element")
 elif args.closing:
     arr = morphological.closing(numberToStructural[args.closing], arr)
+
+if args.hmt and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.hmt and args.hmt not in range(1,13):
+    parser.error("incorrect number of structural element")
+elif args.hmt:
+    arr = morphological.hmt(numberToStructural[args.hmt], arr)
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
