@@ -30,7 +30,7 @@ def checkThreeStatesMatch(kernel: StructuralElement, arrayImage: np.ndarray) -> 
             if kernel.array[x, y]==1:
                 if arrayImage[x, y]!=255:
                     return 0
-            if kernel.array[x, y]==0:
+            elif kernel.array[x, y]==0:
                 if arrayImage[x,y]!=0:
                     return 0
     return 1
@@ -77,15 +77,20 @@ def hmt(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
 
     if isinstance(kernel, tuple):
+        newImages = (np.zeros((len(arrayImage), len(arrayImage[0]))))
         for i in range(len(kernel)):
-            for xArray in range(kernel[i].origin[0], len(arrayImage) - len(kernel[i].array) + kernel[i].origin[0]):
-                for yArray in range(kernel[i].origin[1], len(arrayImage[0]) - len(kernel[i].array[0]) + kernel[i].origin[1]):
+            for xArray in range(kernel[i].origin[0], len(arrayImage) - len(kernel[i].array) + kernel[i].origin[0] + 1):
+                for yArray in range(kernel[i].origin[1], len(arrayImage[0]) - len(kernel[i].array[0]) + kernel[i].origin[1] + 1):
                     arrayImagePart = arrayImage[xArray - kernel[i].origin[0]:xArray + len(kernel[i].array) - kernel[i].origin[0],
                                     yArray - kernel[i].origin[1]:yArray + len(kernel[i].array[0]) - kernel[i].origin[1]]
-                    if checkThreeStatesMatch(kernel[i], arrayImagePart) == 1:
+                    isMatch = checkThreeStatesMatch(kernel[i], arrayImagePart)               
+                    if isMatch == 1:
                         arrayNewImage[xArray, yArray] = 255
-                    else:
+                    elif isMatch == 0:
                         arrayNewImage[xArray, yArray] = 0
+            newImages = np.maximum(newImages, arrayNewImage) 
+        arrayNewImage = newImages
+                        
     else:
         for xArray in range(kernel.origin[0], len(arrayImage) - len(kernel.array) + kernel.origin[0]):
                 for yArray in range(kernel.origin[1], len(arrayImage[0]) - len(kernel.array[0]) + kernel.origin[1]):
@@ -94,7 +99,7 @@ def hmt(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
                     if np.all(arrayImagePart.astype(bool) == kernel.array):
                         arrayNewImage[xArray, yArray] = 255
                     else:
-                        arrayNewImage[xArray, yArray] = 0   
+                        arrayNewImage[xArray, yArray] = 0 
     return arrayNewImage
 
     
