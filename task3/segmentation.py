@@ -29,4 +29,11 @@ def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray) -> li
 
                 visited[currentPoint] = 1
 
+    for i in range(len(region)):
+        j = 0
+        while j < len(region):
+            if i < j and np.array_equal(region[i], region[j]):
+                region = np.delete(region, j, axis=0)
+            j += 1
+
     return region
