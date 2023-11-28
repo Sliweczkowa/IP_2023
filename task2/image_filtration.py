@@ -49,19 +49,19 @@ def sexdetii2(arr: np.array):
         arrH, arrW = arr.shape
         h, w = arrH + 1 - maskH, arrW + 1 - maskW
 
-        filter1 = np.arange(maskW) + np.arange(h)[:, np.newaxis]
+        filter1 = np.arange(maskW) + np.arange(h)[:, np.newaxis] #1
 
-        intermediate = arr[filter1]
-        intermediate = np.transpose(intermediate, (0, 2, 1))
+        intermediate = arr[filter1]                              #2
+        intermediate = np.transpose(intermediate, (0, 2, 1))     #3
 
-        filter2 = np.arange(maskH) + np.arange(w)[:, np.newaxis]
+        filter2 = np.arange(maskH) + np.arange(w)[:, np.newaxis] #4
 
-        intermediate = intermediate[:, filter2]
-        intermediate = np.transpose(intermediate, (0, 1, 3, 2))
+        intermediate = intermediate[:, filter2]                  #5
+        intermediate = np.transpose(intermediate, (0, 1, 3, 2))  #6
 
-        product = intermediate * mask
+        product = intermediate * mask                            #7
 
-        return abs(product.sum(axis=(2, 3)))
+        return abs(product.sum(axis=(2, 3)))                     #8
 
     if arr.ndim == 2:
         result = sexdetii_opt(arr)

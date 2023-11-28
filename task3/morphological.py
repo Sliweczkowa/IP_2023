@@ -102,23 +102,29 @@ def hmt(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
                         arrayNewImage[xArray, yArray] = 0 
     return arrayNewImage
 
+
 def m7(kernel: StructuralElement, arrayImage: np.ndarray):
     resultImage = np.zeros_like(arrayImage)
 
     def s_k(currentImage, kernel, k):
         for _ in range(k):
-            currentImage = erosion(kernel, currentImage)
-        currentImageOpening = opening(kernel, arrayImage)
+            currentImage = erosion(kernel, currentImage).astype(np.int16)
+        currentImageOpening = opening(kernel, currentImage).astype(np.int16)
         result = currentImage.astype(np.int16) - currentImageOpening.astype(np.int16)
-        result[result < 0] = 0
-        return result
+        return abs(result), currentImage
 
     k = 0
-    currentImage = np.copy(arrayImage)
+    done = False
+    previousResult = np.zeros_like(arrayImage)
 
-    while np.sum(currentImage) != 0:
-        currentImage = erosion(kernel, currentImage).astype(np.uint16)
-        resultImage = resultImage | s_k(currentImage, kernel, k)
+    while done == False:
+        if k != 0:
+            if np.sum(erosion(kernel, previousResult)) == 0:
+                done = True
+        if k == 0:
+            resultImage, previousResult = np.logical_or(resultImage, s_k(arrayImage, kernel, 1)).astype(np.uint8) * 255      
+        else:
+            resultImage, previousResult = np.logical_or(resultImage, s_k(previousResult, kernel, 1)).astype(np.uint8) * 255
         print(k, "done")
         k += 1
 
