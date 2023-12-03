@@ -21,7 +21,7 @@ from task3 import structural_elements
 def loadImg(path):
     image = Image.open(path)
     arr = np.array(image.getdata())
-    if arr.ndim == 1: 
+    if arr.ndim == 1:
         numColorChannels = 1
         arr = arr.reshape(image.size[1], image.size[0])
     elif arr.ndim == 2:
@@ -70,6 +70,7 @@ parser.add_argument('--opening', help='Opening', type=int, metavar="[Structural 
 parser.add_argument('--closing', help='Closing', type=int, metavar="[Structural element (1-10)]")
 parser.add_argument('--hmt', help='Hit and Miss Transform', type=int, metavar="[Structural element (1-12)]")
 parser.add_argument('--m7', help='M7 operation', type=int, metavar="[Structural element (1-12)]")
+parser.add_argument('--reg', help='Region growing operation', type=int, nargs='+', metavar="Seed points coordinates")
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -104,7 +105,7 @@ if args.hflip and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.hflip:
     geometric.hflip(arr)
-        
+
 if args.vflip and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.vflip:
@@ -316,6 +317,14 @@ elif args.m7 and args.m7 not in range(1, 11):
     parser.error("incorrect number of structural element")
 elif args.m7:
     arr = morphological.m7(numberToStructural[args.m7], arr)
+
+if args.reg and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.reg:
+    pairs = []
+    for i in range(0, len(args.reg) - 1, 2):
+        pairs.append(tuple(args.reg[i:i + 2]))
+    arr = segmentation.regionGrowing(pairs, arr)
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
