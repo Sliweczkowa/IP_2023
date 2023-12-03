@@ -1,5 +1,4 @@
 import numpy as np
-from enum import Enum
 
 class StructuralElement:
     def __init__(self, array: np.ndarray, origin: (int, int)):
