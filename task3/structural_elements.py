@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class StructuralElement:
     def __init__(self, array: np.ndarray, origin: (int, int)):
         if origin[0] < 0 or origin[0] >= len(array) or origin[1] < 0 or origin[1] >= len(array[0]):
@@ -7,6 +8,7 @@ class StructuralElement:
         else:
             self.array = array
             self.origin = origin
+
     def __len__(self):
         if isinstance(self.array, tuple):
             return len(self.array)

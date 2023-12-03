@@ -5,7 +5,7 @@ import numpy as np
 def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray) -> list[np.ndarray]:
     region = []
     for i in range(len(seedPointList)):
-         region.append(np.zeros_like(arrayImage))
+        region.append(np.zeros_like(arrayImage))
 
     for i, seedPoint in enumerate(seedPointList):
         visited = np.zeros_like(arrayImage)

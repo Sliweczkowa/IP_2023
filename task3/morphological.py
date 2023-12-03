@@ -1,7 +1,6 @@
 import numpy as np
 
 from task3.structural_elements import StructuralElement
-from task3 import structural_elements
 
 
 def checkMatch(kernel: StructuralElement, arrayImage: np.ndarray) -> str:
@@ -17,17 +16,19 @@ def checkMatch(kernel: StructuralElement, arrayImage: np.ndarray) -> str:
         return 'no match'
     else:
         return 'some match'
-    
+
+
 def checkThreeStatesMatch(kernel: StructuralElement, arrayImage: np.ndarray) -> bool:
     for x in range(len(kernel.array)):
         for y in range(len(kernel.array[0])):
-            if kernel.array[x, y]==1:
-                if arrayImage[x, y]!=255:
+            if kernel.array[x, y] == 1:
+                if arrayImage[x, y] != 255:
                     return 0
-            elif kernel.array[x, y]==0:
-                if arrayImage[x,y]!=0:
+            elif kernel.array[x, y] == 0:
+                if arrayImage[x, y] != 0:
                     return 0
     return 1
+
 
 def dilation(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
@@ -62,8 +63,10 @@ def erosion(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
 def opening(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     return dilation(kernel, erosion(kernel, arrayImage))
 
+
 def closing(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     return erosion(kernel, dilation(kernel, arrayImage))
+
 
 def hmt(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     arrayNewImage = np.zeros((len(arrayImage), len(arrayImage[0])))
@@ -85,14 +88,14 @@ def hmt(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
                         
     else:
         for xArray in range(kernel.origin[0], len(arrayImage) - len(kernel.array) + kernel.origin[0] + 1):
-                for yArray in range(kernel.origin[1], len(arrayImage[0]) - len(kernel.array[0]) + kernel.origin[1] + 1):
-                    arrayImagePart = arrayImage[xArray - kernel.origin[0]:xArray + len(kernel.array) - kernel.origin[0],
-                                    yArray - kernel.origin[1]:yArray + len(kernel.array[0]) - kernel.origin[1]]
-                    isMatch = checkThreeStatesMatch(kernel, arrayImagePart)               
-                    if isMatch == 1:
-                        arrayNewImage[xArray, yArray] = 255
-                    elif isMatch == 0:
-                        arrayNewImage[xArray, yArray] = 0
+            for yArray in range(kernel.origin[1], len(arrayImage[0]) - len(kernel.array[0]) + kernel.origin[1] + 1):
+                arrayImagePart = arrayImage[xArray - kernel.origin[0]:xArray + len(kernel.array) - kernel.origin[0],
+                                yArray - kernel.origin[1]:yArray + len(kernel.array[0]) - kernel.origin[1]]
+                isMatch = checkThreeStatesMatch(kernel, arrayImagePart)
+                if isMatch == 1:
+                    arrayNewImage[xArray, yArray] = 255
+                elif isMatch == 0:
+                    arrayNewImage[xArray, yArray] = 0
 
     return arrayNewImage
 
@@ -111,7 +114,7 @@ def m7(kernel: StructuralElement, arrayImage: np.ndarray):
     done = False
     previousResult = np.zeros_like(arrayImage)
 
-    while done == False:
+    while not done:
         if k != 0:
             if np.sum(erosion(kernel, previousResult)) == 0:
                 done = True

@@ -14,8 +14,8 @@ from task2 import image_characteristics     # C1-C6
 from task2 import image_filtration          # S4, O3
 
 from task3 import morphological             # dilation, erosion, opening, closing, HMT transformation, M7
+from task3 import segmentation              # R1
 from task3 import structural_elements
-from task3.structural_elements import StructuralElement
 
 
 def loadImg(path):
@@ -262,57 +262,57 @@ elif args.osobel:
     arr = image_filtration.osobel(arr)
 
 numberToStructural = {
-    1:structural_elements.I,
-    2:structural_elements.II,
-    3:structural_elements.III,
-    4:structural_elements.IV,
-    5:structural_elements.V, 
-    6:structural_elements.VI,
-    7:structural_elements.VII,
-    8:structural_elements.VIII,
-    9:structural_elements.IX,
-    10:structural_elements.X,
-    11:structural_elements.XI,
-    12:structural_elements.XII}
+    1: structural_elements.I,
+    2: structural_elements.II,
+    3: structural_elements.III,
+    4: structural_elements.IV,
+    5: structural_elements.V,
+    6: structural_elements.VI,
+    7: structural_elements.VII,
+    8: structural_elements.VIII,
+    9: structural_elements.IX,
+    10: structural_elements.X,
+    11: structural_elements.XI,
+    12: structural_elements.XII}
 
 if args.dilation and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
-elif args.dilation and args.dilation not in range(1,11):
+elif args.dilation and args.dilation not in range(1, 11):
     parser.error("incorrect number of structural element")
 elif args.dilation:
     arr = morphological.dilation(numberToStructural[args.dilation], arr)
 
 if args.erosion and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
-elif args.erosion and args.erosion not in range(1,11):
+elif args.erosion and args.erosion not in range(1, 11):
     parser.error("incorrect number of structural element")
 elif args.erosion:
     arr = morphological.erosion(numberToStructural[args.erosion], arr)
 
 if args.opening and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
-elif args.opening and args.opening not in range(1,11):
+elif args.opening and args.opening not in range(1, 11):
     parser.error("incorrect number of structural element")
 elif args.opening:
     arr = morphological.opening(numberToStructural[args.opening], arr)
 
 if args.closing and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
-elif args.closing and args.closing not in range(1,11):
+elif args.closing and args.closing not in range(1, 11):
     parser.error("incorrect number of structural element")
 elif args.closing:
     arr = morphological.closing(numberToStructural[args.closing], arr)
 
 if args.hmt and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
-elif args.hmt and args.hmt not in range(1,13):
+elif args.hmt and args.hmt not in range(1, 13):
     parser.error("incorrect number of structural element")
 elif args.hmt:
     arr = morphological.hmt(numberToStructural[args.hmt], arr)
 
 if args.m7 and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
-elif args.m7 and args.m7 not in range(1,11):
+elif args.m7 and args.m7 not in range(1, 11):
     parser.error("incorrect number of structural element")
 elif args.m7:
     arr = morphological.m7(numberToStructural[args.m7], arr)
