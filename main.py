@@ -53,6 +53,7 @@ parser.add_argument('--psnr', help='peak signal to noise ratio, arg1=original im
 parser.add_argument('--md', help='maximum difference error, arg1=original image, arg2=noise image, arg3=filtered image', nargs=3, metavar=('Original', 'Noise', 'Filtered'))
 parser.add_argument('--histogram', help='generates a histogram for a chosen chanel of a chosen image', type=str, metavar="Channel (R/G/B/greyscale)")
 parser.add_argument('--huniform', help='Uniform final probability density function', nargs=2, type=int, metavar=('new minimum brightness', 'new maximum brightness'))
+parser.add_argument('--huniform2', help='Uniform final probability density function - improved', nargs=2, type=int, metavar=('new minimum brightness', 'new maximum brightness'))
 parser.add_argument('--cmean', help='mean, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--cvariance', help='variance, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
 parser.add_argument('--cstdev', help='standard deviation, arg1=original image, arg2=improved image, arg3=brightness levels', nargs=3, metavar=('Original', 'Improved', "brightness levels"))
@@ -180,6 +181,13 @@ elif args.huniform:
     new_min = args.huniform[0]
     new_max = args.huniform[1]
     arr = histogram.huniform(arr, new_min, new_max)
+
+if args.huniform2 and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.huniform2:
+    new_min = args.huniform2[0]
+    new_max = args.huniform2[1]
+    arr = histogram.huniform2(arr, new_min, new_max)
 
 if args.cmean:
     original = loadImg(args.cmean[0])
