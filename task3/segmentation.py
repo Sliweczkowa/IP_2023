@@ -36,4 +36,4 @@ def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray) -> li
                 region = np.delete(region, j, axis=0)
             j += 1
 
-    return region
+    return region[0]
