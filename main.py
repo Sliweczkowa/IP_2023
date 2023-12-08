@@ -74,6 +74,7 @@ parser.add_argument('--hmt', help='Hit and Miss Transform', type=int, metavar="[
 parser.add_argument('--m7', help='M7 operation', type=int, metavar="[Structural element (1-12)]")
 parser.add_argument('--reg', help='Region growing operation', type=int, nargs='+', metavar="Seed points coordinates")
 parser.add_argument('--dft', help='Discrete Fourier Transform', action='store_true')
+parser.add_argument('--fft', help='Fast Fourier Transform', action='store_true')
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
@@ -340,6 +341,11 @@ if args.dft and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.dft:
     arr = fourier_transform.dft(arr)[0]
+
+if args.fft and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.fft:
+    arr = fourier_transform.fft2d(arr)[0]
 
 if args.histogram and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
