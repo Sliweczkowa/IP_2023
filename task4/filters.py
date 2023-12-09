@@ -23,14 +23,12 @@ def createHammingWindow(imageSideLength: int, bandSize: int):
 
 # F1 | Low-pass filter (low-cut filter) for 2D array
 def lpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
-    arrayImage = fourier_transform.fft2d(arrayImage)[1]
-    arrayImage *= createHammingWindow(len(arrayImage), bandSize)
+    arrayImage = np.fft.fft2(arrayImage)
     arrayImage = np.fft.fftshift(arrayImage)
-    arrayImage = fourier_transform.ifft2d(arrayImage)
+    arrayImage *= createHammingWindow(len(arrayImage), bandSize)
+    arrayImage = np.fft.ifftshift(arrayImage)
+    arrayImage = np.fft.ifft2(arrayImage)
     arrayImage = np.abs(arrayImage)
-    arrayImage -= arrayImage.min()
-    arrayImage = arrayImage * 255 / arrayImage.max()
-    arrayImage = arrayImage.astype(np.uint8)
     return arrayImage
 
 
