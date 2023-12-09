@@ -91,7 +91,7 @@ def bpf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
 
 
 def bcfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
-    return lpf(bandSizeLow, arrayImage) + hpf(bandSizeHigh, arrayImage)
+    return lpfForOneChannel(bandSizeLow, arrayImage) + hpfForOneChannel(bandSizeHigh, arrayImage)
 
 
 # F4 | Band-cut filter
