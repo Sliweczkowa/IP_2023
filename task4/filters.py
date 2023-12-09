@@ -21,7 +21,7 @@ def createHammingWindow(imageSideLength: int, bandSize: int):
     return hamming2D
 
 
-# F1 | Low-pass filter (low-cut filter) for 2D array
+# F1 | Low-pass filter (high-cut filter) for 2D array
 def lpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
     arrayImageWoj = fourier_transform.fft2d(arrayImage)[1]
     arrayImage = np.fft.fftshift(arrayImageWoj)
@@ -30,6 +30,21 @@ def lpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
     arrayImage = fourier_transform.ifft2d(arrayImage)
     arrayImage = np.abs(arrayImage)
     return arrayImage
+
+
+# F2 | High-pass filter (low-cut filter) for 2D array
+def hpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
+    return arrayImage - lpfForOneChannel(bandSize, arrayImage)
+
+
+# F3 | Band-pass filter for 2D array
+def bpfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
+    return abs(arrayImage - bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage))
+
+
+# F4 | Band-cut filter for 2D array
+def bcfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
+    return lpfForOneChannel(bandSizeLow, arrayImage) + hpfForOneChannel(bandSizeHigh, arrayImage)
 
 
 #  F1 | Low-pass filter (high-cut filter)
@@ -46,11 +61,6 @@ def lpf(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
         arrayImage[:, :, 2] = lpfForOneChannel(bandSize, arrayImage[:, :, 2])
 
     return arrayImage
-
-
-# F2 | High-pass filter (low-cut filter) for 2D array
-def hpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
-    return arrayImage - lpfForOneChannel(bandSize, arrayImage)
 
 
 # F2 | High-pass filter (low-cut filter)
@@ -70,11 +80,6 @@ def hpf(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
 
 
 # F3 | Band-pass filter
-def bpfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
-    return abs(arrayImage - bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage))
-
-
-# F3 | Band-pass filter
 def bpf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarray:
 
     arrayImage = cropArrayImageToSquare(arrayImage)
@@ -88,10 +93,6 @@ def bpf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
         arrayImage[:, :, 2] = bpfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 2])
 
     return arrayImage
-
-
-def bcfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
-    return lpfForOneChannel(bandSizeLow, arrayImage) + hpfForOneChannel(bandSizeHigh, arrayImage)
 
 
 # F4 | Band-cut filter
