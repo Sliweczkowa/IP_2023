@@ -52,16 +52,7 @@ def lpf(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
 
 # F2 | High-pass filter (low-cut filter) for 2D array
 def hpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
-    arrayImage = fourier_transform.fft2d(arrayImage)[1]
-    arrayImageLPF = arrayImage * createHammingWindow(len(arrayImage), bandSize)
-    arrayImage -= arrayImageLPF
-    arrayImage = np.fft.fftshift(arrayImage)
-    arrayImage = fourier_transform.ifft2d(arrayImage)
-    arrayImage = np.abs(arrayImage)
-    arrayImage -= arrayImage.min()
-    arrayImage = arrayImage * 255 / arrayImage.max()
-    arrayImage = arrayImage.astype(np.uint8)
-    return arrayImage
+    return arrayImage - lpfForOneChannel(bandSize, arrayImage)
 
 
 # F2 | High-pass filter (low-cut filter)
