@@ -69,6 +69,27 @@ def hpf(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
     return arrayImage
 
 
+# F3 | Band-pass filter
+def bpfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
+    return abs(arrayImage - bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage))
+
+
+# F3 | Band-pass filter
+def bpf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarray:
+
+    arrayImage = cropArrayImageToSquare(arrayImage)
+
+    if arrayImage.ndim == 2:
+        arrayImage = bpfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage)
+
+    elif arrayImage.ndim == 3:
+        arrayImage[:, :, 0] = bpfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 0])
+        arrayImage[:, :, 1] = bpfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 1])
+        arrayImage[:, :, 2] = bpfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 2])
+
+    return arrayImage
+
+
 def bcfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
     return lpf(bandSizeLow, arrayImage) + hpf(bandSizeHigh, arrayImage)
 
