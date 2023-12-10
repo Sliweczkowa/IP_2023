@@ -145,18 +145,33 @@ def hpf_edge(arrayImage: np.ndarray, mask: np.ndarray) -> np.ndarray:
 
 # F6 | Phase modifying filter
 def pmf(input_array, k, l):
-    array = fourier_transform.fft2d(input_array)[1]
-    arr = np.fft.fftshift(array)
-    N, M = arr.shape
-    mask = np.zeros((N, M), dtype=np.complex128)
 
-    for n in range(N):
-        for m in range(M):
-            phase = (-n*k*2*np.pi/N) + (-m*l*2*np.pi/M) + (k + l)*np.pi
-            mask[n, m] = np.exp(1j * phase)
+    def phaseShift(input_array, k, l):
+        array = fourier_transform.fft2d(input_array)[1]
+        arr = np.fft.fftshift(array)
+        N, M = arr.shape
+        mask = np.zeros((N, M), dtype=np.complex128)
 
-    filtered_spectrum = arr * mask 
-    arrayImage = np.fft.ifftshift(filtered_spectrum)
-    arrayImage = fourier_transform.ifft2d(arrayImage)
-    arrayImage = np.abs(arrayImage)
+        for n in range(N):
+            for m in range(M):
+                phase = (-n*k*2*np.pi/N) + (-m*l*2*np.pi/M) + (k + l)*np.pi
+                mask[n, m] = np.exp(1j * phase)
+
+        filtered_spectrum = arr * mask 
+        arrayImage = np.fft.ifftshift(filtered_spectrum)
+        arrayImage = fourier_transform.ifft2d(arrayImage)
+        arrayImage = np.abs(arrayImage)
+        return arrayImage
+    if input_array.ndim == 2:
+       arrayImage = phaseShift(input_array, k, l)
+
+    if input_array.ndim == 3:
+        input_r = input_array[:,:,0]
+        input_g = input_array[:,:,1]
+        input_b = input_array[:,:,2]
+        arrayImage = np.zeros_like(input_array)
+        arrayImage[:,:, 0] = phaseShift(input_r, k, l)
+        arrayImage[:,:,1] = phaseShift(input_g, k, l)
+        arrayImage[:,:, 2] = phaseShift(input_b, k, l)
+        
     return arrayImage
