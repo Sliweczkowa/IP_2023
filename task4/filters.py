@@ -123,7 +123,7 @@ def bcf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
 
     return arrayImage
 
-# F6 | [...] filter
+# F6 | Phase modification filter
 
 def pmf(input_array, k, l):
     array = fourier_transform.fft2d(input_array)[1]
