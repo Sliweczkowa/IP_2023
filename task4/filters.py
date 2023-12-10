@@ -22,19 +22,6 @@ def createHammingWindow(imageSideLength: int, bandSize: int):
     return hamming2D
 
 
-# Function creating mask of phase modifying filter
-def createPhaseMask(imageHeight: int, imageWidth: int, l: int, k: int, j: int) -> np.ndarray:
-    mask = np.zeros((imageHeight, imageWidth), dtype=float)
-
-    for n in range(imageHeight):
-        for m in range(imageWidth):
-            firstParenthesis = (-1) * n * k * 2 * np.pi / imageHeight
-            secondParenthesis = (-1) * m * l * 2 * np.pi / imageWidth
-            mask[n, m] = np.exp(j * (firstParenthesis + secondParenthesis + ((k + l) * np.pi)))
-
-    return mask
-
-
 # F1 | Low-pass filter (high-cut filter) for 2D array
 def lpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
     arrayImage = fourier_transform.fft2d(arrayImage)[1]
