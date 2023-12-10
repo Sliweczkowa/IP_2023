@@ -122,3 +122,22 @@ def bcf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
         arrayImage[:, :, 2] = bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 2])
 
     return arrayImage
+
+# F6 | [...] filter
+
+def pmf(input_array, k, l):
+    array = fourier_transform.fft2d(input_array)[1]
+    arr = np.fft.fftshift(array)
+    N, M = arr.shape
+    mask = np.zeros((N, M), dtype=np.complex128)
+
+    for n in range(N):
+        for m in range(M):
+            phase = (-n*k*2*np.pi/N) + (-m*l*2*np.pi/M) + (k + l)*np.pi
+            mask[n, m] = np.exp(1j * phase)
+
+    filtered_spectrum = arr * mask 
+    arrayImage = np.fft.ifftshift(filtered_spectrum)
+    arrayImage = fourier_transform.ifft2d(arrayImage)
+    arrayImage = np.abs(arrayImage)
+    return arrayImage
