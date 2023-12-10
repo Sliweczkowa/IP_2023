@@ -88,7 +88,7 @@ def lpf(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
         arrayImage[:, :, 1] = lpfForOneChannel(bandSize, arrayImage[:, :, 1])
         arrayImage[:, :, 2] = lpfForOneChannel(bandSize, arrayImage[:, :, 2])
 
-    return arrayImage
+    return arrayImage.astype(np.uint8)
 
 
 # F2 | High-pass filter (low-cut filter)
@@ -104,7 +104,7 @@ def hpf(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
         arrayImage[:, :, 1] = hpfForOneChannel(bandSize, arrayImage[:, :, 1])
         arrayImage[:, :, 2] = hpfForOneChannel(bandSize, arrayImage[:, :, 2])
 
-    return arrayImage
+    return arrayImage.astype(np.uint8)
 
 
 # F3 | Band-pass filter
@@ -120,7 +120,7 @@ def bpf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
         arrayImage[:, :, 1] = bpfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 1])
         arrayImage[:, :, 2] = bpfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 2])
 
-    return arrayImage
+    return arrayImage.astype(np.uint8)
 
 
 # F4 | Band-cut filter
@@ -136,7 +136,7 @@ def bcf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
         arrayImage[:, :, 1] = bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 1])
         arrayImage[:, :, 2] = bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage[:, :, 2])
 
-    return arrayImage
+    return arrayImage.astype(np.uint8)
 
 
 # F5 | High-pass filter with detection of edge direction [image size - len(mask)xlen(mask)]
@@ -152,7 +152,7 @@ def hpf_edge(arrayImage: np.ndarray, mask: np.ndarray) -> np.ndarray:
         arrayImage[:, :, 1] = hpfEdgeDetectionForOneChannel(arrayImage[:, :, 1], mask)
         arrayImage[:, :, 2] = hpfEdgeDetectionForOneChannel(arrayImage[:, :, 2], mask)
 
-    return arrayImage
+    return arrayImage.astype(np.uint8)
 
 
 # F6 | Phase modifying filter
