@@ -30,22 +30,24 @@ def lpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
     arrayImage = np.fft.ifftshift(arrayImage)
     arrayImage = fourier_transform.ifft2d(arrayImage)
     arrayImage = np.abs(arrayImage)
-    return arrayImage
+    arrayImage -= arrayImage.min()
+    arrayImage = arrayImage * 255 / arrayImage.max()
+    return arrayImage.clip(0, 255)
 
 
 # F2 | High-pass filter (low-cut filter) for 2D array
 def hpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
-    return arrayImage - lpfForOneChannel(bandSize, arrayImage)
+    return (arrayImage - lpfForOneChannel(bandSize, arrayImage)).clip(0, 255)
 
 
 # F3 | Band-pass filter for 2D array
 def bpfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
-    return abs(arrayImage - bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage))
+    return abs(arrayImage - bcfForOneChannel(bandSizeLow, bandSizeHigh, arrayImage)).clip(0, 255)
 
 
 # F4 | Band-cut filter for 2D array
 def bcfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
-    return lpfForOneChannel(bandSizeLow, arrayImage) + hpfForOneChannel(bandSizeHigh, arrayImage)
+    return (lpfForOneChannel(bandSizeLow, arrayImage) + hpfForOneChannel(bandSizeHigh, arrayImage)).clip(0, 255)
 
 
 # F5 | High-pass filter with detection of edge direction for 2D array [image size - 256x256]
@@ -58,7 +60,7 @@ def hpfEdgeDetectionForOneChannel(image: np.ndarray, mask: np.ndarray) -> np.nda
     arrayImage = np.abs(arrayImage)
     arrayImage -= arrayImage.min()
     arrayImage = arrayImage * 255 / arrayImage.max()
-    return arrayImage
+    return arrayImage.clip(0, 255)
 
 
 #  F1 | Low-pass filter (high-cut filter)
