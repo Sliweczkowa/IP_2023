@@ -4,13 +4,14 @@ from task4 import fourier_transform
 
 
 # Function cropping image to square
-def cropArrayImageToSquare(arrayImage: np.ndarray) -> np.ndarray:
-    if len(arrayImage) != len(arrayImage[0]):
-        if len(arrayImage) < len(arrayImage[0]):
-            shorterImageSideLength = len(arrayImage)
-        elif len(arrayImage) > len(arrayImage[0]):
-            shorterImageSideLength = len(arrayImage[0])
-        arrayImage = arrayImage[:shorterImageSideLength, :shorterImageSideLength]
+def cropArrayImageToSquare(arrayImage: np.ndarray, sideLength: int = None) -> np.ndarray:
+    if sideLength == None:
+        if len(arrayImage) != len(arrayImage[0]):
+            if len(arrayImage) < len(arrayImage[0]):
+                sideLength = len(arrayImage)
+            elif len(arrayImage) > len(arrayImage[0]):
+                sideLength = len(arrayImage[0])
+    arrayImage = arrayImage[:sideLength, :sideLength]
     return arrayImage
 
 
@@ -36,8 +37,8 @@ def createPhaseMask(imageHeight: int, imageWidth: int, l: int, k: int, j: int) -
 
 # F1 | Low-pass filter (high-cut filter) for 2D array
 def lpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
-    arrayImageWoj = fourier_transform.fft2d(arrayImage)[1]
-    arrayImage = np.fft.fftshift(arrayImageWoj)
+    arrayImage = fourier_transform.fft2d(arrayImage)[1]
+    arrayImage = np.fft.fftshift(arrayImage)
     arrayImage *= createHammingWindow(len(arrayImage), bandSize)
     arrayImage = np.fft.ifftshift(arrayImage)
     arrayImage = fourier_transform.ifft2d(arrayImage)
@@ -58,6 +59,20 @@ def bpfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> 
 # F4 | Band-cut filter for 2D array
 def bcfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> np.ndarray:
     return lpfForOneChannel(bandSizeLow, arrayImage) + hpfForOneChannel(bandSizeHigh, arrayImage)
+
+
+# F5 | High-pass filter with detection of edge direction for 2D array [image size - 256x256]
+def hpfEdgeDetectionForOneChannel(image: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    arrayImage = fourier_transform.fft2d(image)[1]
+    arrayImageLPF = arrayImage * mask
+    arrayImage -= arrayImageLPF
+    arrayImage = np.fft.fftshift(arrayImage)
+    arrayImage = fourier_transform.ifft2d(arrayImage)
+    arrayImage = np.abs(arrayImage)
+    arrayImage -= arrayImage.min()
+    arrayImage = arrayImage * 255 / arrayImage.max()
+    arrayImage = arrayImage.astype(np.uint8)
+    return arrayImage
 
 
 #  F1 | Low-pass filter (high-cut filter)
@@ -123,8 +138,24 @@ def bcf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
 
     return arrayImage
 
-# F6 | Phase modification filter
 
+# F5 | High-pass filter with detection of edge direction [image size - len(mask)xlen(mask)]
+def hpf_edge(arrayImage: np.ndarray, mask: np.ndarray) -> np.ndarray:
+
+    arrayImage = cropArrayImageToSquare(arrayImage, len(mask))
+
+    if arrayImage.ndim == 2:
+        arrayImage = hpfEdgeDetectionForOneChannel(arrayImage, mask)
+
+    elif arrayImage.ndim == 3:
+        arrayImage[:, :, 0] = hpfEdgeDetectionForOneChannel(arrayImage[:, :, 0], mask)
+        arrayImage[:, :, 1] = hpfEdgeDetectionForOneChannel(arrayImage[:, :, 1], mask)
+        arrayImage[:, :, 2] = hpfEdgeDetectionForOneChannel(arrayImage[:, :, 2], mask)
+
+    return arrayImage
+
+
+# F6 | Phase modifying filter
 def pmf(input_array, k, l):
     array = fourier_transform.fft2d(input_array)[1]
     arr = np.fft.fftshift(array)
