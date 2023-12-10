@@ -4,13 +4,14 @@ from task4 import fourier_transform
 
 
 # Function cropping image to square
-def cropArrayImageToSquare(arrayImage: np.ndarray) -> np.ndarray:
-    if len(arrayImage) != len(arrayImage[0]):
-        if len(arrayImage) < len(arrayImage[0]):
-            shorterImageSideLength = len(arrayImage)
-        elif len(arrayImage) > len(arrayImage[0]):
-            shorterImageSideLength = len(arrayImage[0])
-        arrayImage = arrayImage[:shorterImageSideLength, :shorterImageSideLength]
+def cropArrayImageToSquare(arrayImage: np.ndarray, sideLength: int = None) -> np.ndarray:
+    if sideLength == None:
+        if len(arrayImage) != len(arrayImage[0]):
+            if len(arrayImage) < len(arrayImage[0]):
+                sideLength = len(arrayImage)
+            elif len(arrayImage) > len(arrayImage[0]):
+                sideLength = len(arrayImage[0])
+    arrayImage = arrayImage[:sideLength, :sideLength]
     return arrayImage
 
 
