@@ -36,8 +36,8 @@ def createPhaseMask(imageHeight: int, imageWidth: int, l: int, k: int, j: int) -
 
 # F1 | Low-pass filter (high-cut filter) for 2D array
 def lpfForOneChannel(bandSize: int, arrayImage: np.ndarray) -> np.ndarray:
-    arrayImageWoj = fourier_transform.fft2d(arrayImage)[1]
-    arrayImage = np.fft.fftshift(arrayImageWoj)
+    arrayImage = fourier_transform.fft2d(arrayImage)[1]
+    arrayImage = np.fft.fftshift(arrayImage)
     arrayImage *= createHammingWindow(len(arrayImage), bandSize)
     arrayImage = np.fft.ifftshift(arrayImage)
     arrayImage = fourier_transform.ifft2d(arrayImage)
@@ -123,8 +123,8 @@ def bcf(bandSizeLow: int, bandSizeHigh: int, arrayImage: np.ndarray) -> np.ndarr
 
     return arrayImage
 
-# F6 | [...] filter
 
+# F6 | Phase modifying filter
 def pmf(input_array, k, l):
     array = fourier_transform.fft2d(input_array)[1]
     arr = np.fft.fftshift(array)
