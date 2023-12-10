@@ -64,14 +64,13 @@ def bcfForOneChannel(bandSizeLow: int, bandSizeHigh, arrayImage: np.ndarray) -> 
 # F5 | High-pass filter with detection of edge direction for 2D array [image size - 256x256]
 def hpfEdgeDetectionForOneChannel(image: np.ndarray, mask: np.ndarray) -> np.ndarray:
     arrayImage = fourier_transform.fft2d(image)[1]
-    arrayImageLPF = arrayImage * mask
+    arrayImageLPF = arrayImage * (mask / 255)
     arrayImage -= arrayImageLPF
     arrayImage = np.fft.fftshift(arrayImage)
     arrayImage = fourier_transform.ifft2d(arrayImage)
     arrayImage = np.abs(arrayImage)
     arrayImage -= arrayImage.min()
     arrayImage = arrayImage * 255 / arrayImage.max()
-    arrayImage = arrayImage.astype(np.uint8)
     return arrayImage
 
 
