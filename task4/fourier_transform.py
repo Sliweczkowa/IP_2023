@@ -5,28 +5,49 @@ import numpy as np
 def dft(arr: np.complex128):
     N = len(arr)
     M = len(arr[0])
-    res_arr = np.zeros((N, M), dtype=np.complex128)
+    res_arr = np.zeros_like(arr, dtype=np.complex128)
 
-    for p in range(N):
-        for q in range(M):
-            res_arr[p, q] = 1/(np.sqrt(N*M)) * (np.sum(arr * (np.exp(-1j*2*np.pi*np.arange(N).reshape(-1, 1)*p / N) * 
-                              np.exp(-1j*2*np.pi*np.arange(M)*q / M))))
-    res_arr_shift = np.fft.fftshift(res_arr)
-    res_arr_adjusted = 10 * np.log(1+np.abs(res_arr_shift))
+    
+    if arr.ndim == 2:
+        for p in range(N):
+            print("doing ", p)
+            for q in range(M):
+                res_arr[p, q] = (np.sum(arr * (np.exp(-1j*2*np.pi*np.arange(N).reshape(-1, 1)*p / N) * 
+                                np.exp(-1j*2*np.pi*np.arange(M)*q / M))))
+        res_arr_shift = np.fft.fftshift(res_arr)
+        res_arr_adjusted = 10 * np.log(1+np.abs(res_arr_shift))
+                
+    elif arr.ndim == 3:
+        for c in range(3):
+            for p in range(N):
+                print("doing ", p)
+                for q in range(M):
+                    res_arr[p, q, c] = (np.sum(arr[:,:,c] * (np.exp(-1j*2*np.pi*np.arange(N).reshape(-1, 1)*p / N) * 
+                                    np.exp(-1j*2*np.pi*np.arange(M)*q / M))))
+        res_arr_adjusted = np.zeros_like(res_arr, dtype=np.complex128)
+        res_arr_adjusted[:,:,0] = 10 * np.log(1+np.abs(np.fft.fftshift(res_arr[:,:,0])))
+        res_arr_adjusted[:,:,1] = 10 * np.log(1+np.abs(np.fft.fftshift(res_arr[:,:,1])))
+        res_arr_adjusted[:,:,2] = 10 * np.log(1+np.abs(np.fft.fftshift(res_arr[:,:,2])))
+    
     return res_arr_adjusted, res_arr
 
 def idft(arr: np.complex128):
     N = len(arr)
     M = len(arr[0])
-    res_arr = np.zeros((N, M), dtype=np.complex128)
+    res_arr = np.zeros_like(arr, dtype=np.complex128)
 
-    for p in range(N):
-        print("calculating"+str(p)+" of "+str(N))
-        for q in range(M):
-            res_arr[p, q] = (np.sum(arr * (np.exp(-1j*2*np.pi*np.arange(N).reshape(-1, 1)*p / N) * 
-                              np.exp(1j*2*np.pi*np.arange(M)*q / M))))
-
-    return res_arr
+    if arr.ndim == 2:
+        for p in range(N):
+            for q in range(M):
+                res_arr[p, q] = (np.sum(arr * (np.exp(1j*2*np.pi*(np.arange(N)/N).reshape(-1, 1)*p)) * 
+                                np.exp(1j*2*np.pi*(np.arange(M)/M)*q)))
+    elif arr.ndim == 3:
+        for c in range(3):
+            for p in range(N):
+                for q in range(M):
+                    res_arr[p, q, c] = (np.sum(arr[:,:,c] * (np.exp(1j*2*np.pi*(np.arange(N)/N).reshape(-1, 1)*p)) * 
+                                np.exp(1j*2*np.pi*(np.arange(M)/M)*q)))
+    return res_arr / (M * N)
 
 def fft(x: np.complex128):
   N = len(x)
