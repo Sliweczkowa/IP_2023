@@ -8,13 +8,12 @@ def dft(arr: np.complex128):
     res_arr = np.zeros((N, M), dtype=np.complex128)
 
     for p in range(N):
-        print("calculating"+str(p)+" of "+str(N))
         for q in range(M):
             res_arr[p, q] = 1/(np.sqrt(N*M)) * (np.sum(arr * (np.exp(-1j*2*np.pi*np.arange(N).reshape(-1, 1)*p / N) * 
                               np.exp(-1j*2*np.pi*np.arange(M)*q / M))))
-    res_arrs = np.fft.fftshift(res_arr)
-    lres_arrs = 10 * np.log(1+np.abs(res_arrs))
-    return lres_arrs, res_arr
+    res_arr_shift = np.fft.fftshift(res_arr)
+    res_arr_adjusted = 10 * np.log(1+np.abs(res_arr_shift))
+    return res_arr_adjusted, res_arr
 
 def idft(arr: np.complex128):
     N = len(arr)
@@ -44,9 +43,9 @@ def fft2d(x: np.complex128):
 
     x_col_fft = np.array([fft(col) for col in x_row_fft.T], dtype=np.complex128).T
 
-    res_arrs = np.fft.fftshift(x_col_fft)
-    lres_arrs = 10 * np.log(1+np.abs(res_arrs))
-    return lres_arrs, x_col_fft
+    res_arr_shift = np.fft.fftshift(x_col_fft)
+    res_arr_adjusted = 10 * np.log(1+np.abs(res_arr_shift))
+    return res_arr_adjusted, x_col_fft
 
 def ifft(x, final=True):
   N = len(x)
