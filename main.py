@@ -17,11 +17,23 @@ from task3 import morphological             # dilation, erosion, opening, closin
 from task3 import segmentation              # R1
 from task3 import structural_elements
 
-from task4 import fourier_transform         
-from task4 import filters         
+from task4 import fourier_transform         # T2
+from task4 import filters                   # F1-F6
 
 def loadImg(path):
     image = Image.open(path)
+    arr = np.array(image.getdata())
+    if arr.ndim == 1:
+        numColorChannels = 1
+        arr = arr.reshape(image.size[1], image.size[0])
+    elif arr.ndim == 2:
+        numColorChannels = arr.shape[1]
+        arr = arr.reshape(image.size[1], image.size[0], numColorChannels)
+    return arr
+
+
+def loadMask(path):
+    image = Image.open(path).convert('L')
     arr = np.array(image.getdata())
     if arr.ndim == 1:
         numColorChannels = 1
