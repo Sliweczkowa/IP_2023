@@ -32,35 +32,36 @@ def regionGrowingForOneChannel(seedPointList: list[(int, int)], arrayImage: np.n
 
                 visited[currentPoint] = 1
 
-    for i in range(len(region)):
-        j = 0
-        while j < len(region):
-            if i < j and np.array_equal(region[i], region[j]):
-                region = np.delete(region, j, axis=0)
-            j += 1
+    # for i in range(len(region)):
+    #     j = 0
+    #     while j < len(region):
+    #         if i < j and np.array_equal(region[i], region[j]):
+    #             region = np.delete(region, j, axis=0)
+    #         j += 1
 
     return region
 
 
-def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray, conditionValue: int) -> list[np.ndarray]:
+def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray, conditionValue: int) -> np.ndarray:
 
     if arrayImage.ndim == 2:
         return regionGrowingForOneChannel(seedPointList, arrayImage, conditionValue)[0]
 
     elif arrayImage.ndim == 3:
-        regionOfOneChannel = []
-        regionOfOneChannel[0] = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 0], conditionValue)
-        regionOfOneChannel[1] = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 1], conditionValue)
-        regionOfOneChannel[2] = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 2], conditionValue)
+        regionOfOneChannel0 = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 0], conditionValue)
+        regionOfOneChannel1 = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 1], conditionValue)
+        regionOfOneChannel2 = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 2], conditionValue)
 
-        # region = [len(seedPointList)][len(arrayImage), len(arrayImage[0])][3]
         region = []
 
         for i in range(len(seedPointList)):
-            for x in range(len(arrayImage)):
-                for y in range(len(arrayImage[0])):
-                    region[i][x, y][0] = regionOfOneChannel[0][x, y]
-                    region[i][x, y][1] = regionOfOneChannel[1][x, y]
-                    region[i][x, y][2] = regionOfOneChannel[2][x, y]
+            region.append(np.zeros_like(arrayImage))
 
-    return region[0]
+        for x in range(len(arrayImage)):
+            for y in range(len(arrayImage[0])):
+                for i in range(len(seedPointList)):
+                    region[i][x, y, 0] = regionOfOneChannel0[i][x, y]
+                    region[i][x, y, 1] = regionOfOneChannel1[i][x, y]
+                    region[i][x, y, 2] = regionOfOneChannel2[i][x, y]
+
+        return region[0].astype(np.uint8)
