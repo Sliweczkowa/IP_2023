@@ -90,6 +90,7 @@ parser.add_argument('--dft', help='Discrete Fourier Transform (spectrum visualis
 parser.add_argument('--fft', help='Fast Fourier Transform (spectrum visualisation)', action='store_true')
 parser.add_argument('--lpf', help='Low-pass filter', type=int, metavar='Band Size')
 parser.add_argument('--hpf', help='High-pass filter', type=int, metavar='Band Size')
+parser.add_argument('--hpfe', help='High-pass filter with detection of edge direction', type=int, metavar='Mask no. 1/2')
 parser.add_argument('--bpf', help='Band-pass filter', nargs=2, metavar=('Band Size For LPF', 'Band Size For HPF'))
 parser.add_argument('--bcf', help='Band-cut filter', nargs=2, metavar=('Band Size For LPF', 'Band Size For HPF'))
 parser.add_argument('--pmf', help='Phase Modifying Filter', nargs=2, type=int, metavar=("k", "l"))
@@ -374,6 +375,14 @@ if args.hpf and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.hpf:
     arr = filters.hpf(args.hpf, arr)
+
+if args.hpfe and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.hpfe:
+    if args.hpfe == 1:
+        arr = filters.hpf_edge(arr, loadMask('task4/F5mask1.bmp'))
+    elif args.hpfe == 2:
+        arr = filters.hpf_edge(arr, loadMask('task4/F5mask2.bmp'))
 
 if args.bpf and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
