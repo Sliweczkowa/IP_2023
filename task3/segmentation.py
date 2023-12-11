@@ -42,7 +42,25 @@ def regionGrowingForOneChannel(seedPointList: list[(int, int)], arrayImage: np.n
     return region
 
 
-def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray) -> list[np.ndarray]:
+def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray, conditionValue: int) -> list[np.ndarray]:
 
     if arrayImage.ndim == 2:
-        return regionGrowingForOneChannel(seedPointList, arrayImage)[0]
+        return regionGrowingForOneChannel(seedPointList, arrayImage, conditionValue)[0]
+
+    elif arrayImage.ndim == 3:
+        regionOfOneChannel = []
+        regionOfOneChannel[0] = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 0], conditionValue)
+        regionOfOneChannel[1] = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 1], conditionValue)
+        regionOfOneChannel[2] = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 2], conditionValue)
+
+        # region = [len(seedPointList)][len(arrayImage), len(arrayImage[0])][3]
+        region = []
+
+        for i in range(len(seedPointList)):
+            for x in range(len(arrayImage)):
+                for y in range(len(arrayImage[0])):
+                    region[i][x, y][0] = regionOfOneChannel[0][x, y]
+                    region[i][x, y][1] = regionOfOneChannel[1][x, y]
+                    region[i][x, y][2] = regionOfOneChannel[2][x, y]
+
+    return region[0]
