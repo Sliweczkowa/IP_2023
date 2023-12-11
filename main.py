@@ -88,6 +88,10 @@ parser.add_argument('--m7', help='M7 operation', type=int, metavar="[Structural 
 parser.add_argument('--reg', help='Region growing operation', type=int, nargs='+', metavar="Seed points coordinates")
 parser.add_argument('--dft', help='Discrete Fourier Transform (spectrum visualisation)', action='store_true')
 parser.add_argument('--fft', help='Fast Fourier Transform (spectrum visualisation)', action='store_true')
+parser.add_argument('--lpf', help='Low-pass filter', type=int, metavar='Band Size')
+parser.add_argument('--hpf', help='High-pass filter', type=int, metavar='Band Size')
+parser.add_argument('--bpf', help='Band-pass filter', nargs=2, metavar=('Band Size For LPF', 'Band Size For HPF'))
+parser.add_argument('--bcf', help='Band-cut filter', nargs=2, metavar=('Band Size For LPF', 'Band Size For HPF'))
 parser.add_argument('--pmf', help='Phase Modifying Filter', nargs=2, type=int, metavar=("k", "l"))
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
@@ -360,6 +364,30 @@ if args.fft and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.fft:
     arr = fourier_transform.fourierVisualise(arr)
+
+if args.lpf and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.lpf:
+    arr = filters.lpf(args.lpf, arr)
+
+if args.hpf and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.hpf:
+    arr = filters.hpf(args.hpf, arr)
+
+if args.bpf and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.bpf:
+    low = int(args.bpf[0])
+    high = int(args.bpf[1])
+    arr = filters.bpf(low, high, arr)
+
+if args.bcf and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.bcf:
+    low = int(args.bcf[0])
+    high = int(args.bcf[1])
+    arr = filters.bcf(low, high, arr)
 
 if args.pmf and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
