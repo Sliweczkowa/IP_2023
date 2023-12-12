@@ -85,7 +85,7 @@ parser.add_argument('--opening', help='Opening', type=int, metavar="[Structural 
 parser.add_argument('--closing', help='Closing', type=int, metavar="[Structural element (1-10)]")
 parser.add_argument('--hmt', help='Hit and Miss Transform', type=int, metavar="[Structural element (1-12)]")
 parser.add_argument('--m7', help='M7 operation', type=int, metavar="[Structural element (1-12)]")
-parser.add_argument('--reg', help='Region growing operation', type=int, nargs='+', metavar="Seed points coordinates")
+parser.add_argument('--reg', help='Region growing operation', type=int, nargs='+', metavar="Seed points coordinates, condition value")
 parser.add_argument('--dft', help='Discrete Fourier Transform (spectrum visualisation)', action='store_true')
 parser.add_argument('--fft', help='Fast Fourier Transform (spectrum visualisation)', action='store_true')
 parser.add_argument('--lpf', help='Low-pass filter', type=int, metavar='Band Size')
@@ -352,9 +352,9 @@ if args.reg and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
 elif args.reg:
     pairs = []
-    for i in range(0, len(args.reg) - 1, 2):
+    for i in range(0, len(args.reg) - 2, 2):
         pairs.append(tuple(args.reg[i:i + 2]))
-    arr = segmentation.regionGrowing(pairs, arr)
+    arr = segmentation.regionGrowing(pairs, arr, args.reg[-1])
 
 if args.dft and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
