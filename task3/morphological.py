@@ -100,6 +100,22 @@ def hmt(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
     return arrayNewImage
 
 
+def m1(kernel: StructuralElement, arrayImage: np.ndarray) -> np.ndarray:
+    m1Image = dilation(kernel, arrayImage)
+
+    for i in range(len(arrayImage)):
+        for j in range(len(arrayImage[0])):
+            if arrayImage[i, j] == 255 and m1Image[i, j] == 255:
+                m1Image[i, j] = 0
+            # Does not change the value
+            # elif arrayImage[i, j] == 0 and m1Image[i, j] == 255:
+            #     m1Image[i, j] == 255
+            # elif arrayImage[i, j] == 0 and m1Image[i, j] == 0:
+            #     m1Image[i, j] == 0
+
+    return m1Image
+
+
 def m7(kernel: StructuralElement, arrayImage: np.ndarray):
     resultImage = np.zeros_like(arrayImage)
 

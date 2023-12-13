@@ -84,6 +84,7 @@ parser.add_argument('--erosion', help='Erosion', type=int, metavar="[Structural 
 parser.add_argument('--opening', help='Opening', type=int, metavar="[Structural element (1-10)]")
 parser.add_argument('--closing', help='Closing', type=int, metavar="[Structural element (1-10)]")
 parser.add_argument('--hmt', help='Hit and Miss Transform', type=int, metavar="[Structural element (1-12)]")
+parser.add_argument('--m1', help='M1 variant 1 operation', type=int, metavar="[Structural element (1-12)]")
 parser.add_argument('--m7', help='M7 operation', type=int, metavar="[Structural element (1-12)]")
 parser.add_argument('--reg', help='Region growing operation', type=int, nargs='+', metavar="Seed points coordinates, condition value")
 parser.add_argument('--dft', help='Discrete Fourier Transform (spectrum visualisation)', action='store_true')
@@ -340,6 +341,13 @@ elif args.hmt and args.hmt not in range(1, 13):
     parser.error("incorrect number of structural element")
 elif args.hmt:
     arr = morphological.hmt(numberToStructural[args.hmt], arr)
+
+if args.m1 and (args.load is None or args.save is None):
+    parser.error("--load and --save arguments are required for this operation.")
+elif args.m1 and args.m1 not in range(1, 11):
+    parser.error("incorrect number of structural element")
+elif args.m1:
+    arr = morphological.m1(numberToStructural[args.m1], arr)
 
 if args.m7 and (args.load is None or args.save is None):
     parser.error("--load and --save arguments are required for this operation.")
