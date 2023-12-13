@@ -1,8 +1,6 @@
 import numpy as np
 
 
-# TODO: conditionValue to CLI
-
 # R1 | Region growing (merging)
 def regionGrowingForOneChannel(seedPointList: list[(int, int)], arrayImage: np.ndarray, conditionValue: int) -> list[np.ndarray]:
     region = []
