@@ -61,6 +61,17 @@ def fft(x):
   return np.concatenate([even + T[:N//2] * odd,
                        even + T[N//2:] * odd])
 
+
+def fft_wip(x):
+  N = len(x)
+  if N <= 1:
+      return x
+  first_half = fft(x[:N//2])
+  second_half = fft(x[N//2:])
+  T = np.exp(-2j * np.pi * np.arange(N) / N)
+  return np.concatenate([first_half + second_half * T[0:N//2],
+                       first_half + second_half * T[N//2:]])
+
 def fft2d(x):
     fft_rows = np.array([fft(row) for row in x], dtype=np.complex128)
     res_arr = np.array([fft(col) for col in fft_rows.T], dtype=np.complex128).T

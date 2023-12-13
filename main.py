@@ -93,7 +93,7 @@ parser.add_argument('--hpf', help='High-pass filter', type=int, metavar='Band Si
 parser.add_argument('--hpfe', help='High-pass filter with detection of edge direction', type=int, metavar='Mask no. 1/2')
 parser.add_argument('--bpf', help='Band-pass filter', nargs=2, metavar=('Band Size For LPF', 'Band Size For HPF'))
 parser.add_argument('--bcf', help='Band-cut filter', nargs=2, metavar=('Band Size For LPF', 'Band Size For HPF'))
-parser.add_argument('--pmf', help='Phase Modifying Filter', nargs=2, type=int, metavar=("k", "l"))
+parser.add_argument('--pmf', help='Phase Modifying Filter', nargs=2, type=int, metavar=("y", "x"))
 parser.add_argument('--load', help='loads an image from a given path', metavar='Path')
 parser.add_argument('--save', help='saves edited image in a specified folder under a specified name', metavar='Path')
 
