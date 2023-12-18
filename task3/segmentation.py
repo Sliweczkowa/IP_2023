@@ -19,13 +19,13 @@ def regionGrowingForOneChannel(seedPointList: list[(int, int)], arrayImage: np.n
                         arrayImage[currentPoint] <= arrayImage[seedPoint] + conditionValue):
                     region[i][currentPoint] = arrayImage[currentPoint]
 
-                    if not currentPoint[1] + 1 == len(arrayImage[0]):
+                    if currentPoint[1] + 1 < len(arrayImage[0]):
                         stack.append((currentPoint[0], currentPoint[1] + 1))
-                    if not currentPoint[1] - 1 == 0:
+                    if currentPoint[1] - 1 >= 0:
                         stack.append((currentPoint[0], currentPoint[1] - 1))
-                    if not currentPoint[0] + 1 == len(arrayImage[0]):
+                    if currentPoint[0] + 1 < len(arrayImage):
                         stack.append((currentPoint[0] + 1, currentPoint[1]))
-                    if not currentPoint[0] - 1 == 0:
+                    if currentPoint[0] - 1 >= 0:
                         stack.append((currentPoint[0] - 1, currentPoint[1]))
 
                 visited[currentPoint] = 1
@@ -51,12 +51,15 @@ def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray, condi
             k.append(np.zeros_like(arrayImage))
 
         for i in range(len(seedPointList)):
-            k[i] = intencityRegionGrowing[i] / mean
+            for x in range(len(arrayImage)):
+                for y in range(len(arrayImage[0])):
+                    if mean[x, y] != 0:
+                        k[i][x, y] = intencityRegionGrowing[i][x, y] / mean[x, y]
 
         for i in range(len(seedPointList)):
-            region[i][:, :, 2] = np.clip(arrayImage[:, :, 2] * k[i], 0, 255)
-            region[i][:, :, 1] = np.clip(arrayImage[:, :, 1] * k[i], 0, 255)
-            region[i][:, :, 0] = np.clip(arrayImage[:, :, 0] * k[i], 0, 255)
+            region[i][:, :, 2] = np.clip(arrayImage[:, :, 2] * k[i][:, :, 2], 0, 255)
+            region[i][:, :, 1] = np.clip(arrayImage[:, :, 1] * k[i][:, :, 1], 0, 255)
+            region[i][:, :, 0] = np.clip(arrayImage[:, :, 0] * k[i][:, :, 0], 0, 255)
 
     for i in range(len(region)-1):
         j = i + 1
