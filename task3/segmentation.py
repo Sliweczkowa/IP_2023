@@ -5,7 +5,7 @@ import numpy as np
 def regionGrowingForOneChannel(seedPointList: list[(int, int)], arrayImage: np.ndarray, conditionValue: int) -> list[np.ndarray]:
     region = []
     for i in range(len(seedPointList)):
-        region.append(np.zeros_like(arrayImage))
+        region.append(np.full((len(arrayImage), len(arrayImage[0])), -1))
 
     for i, seedPoint in enumerate(seedPointList):
         visited = np.zeros((len(arrayImage), len(arrayImage[0])), dtype=bool)
@@ -42,6 +42,9 @@ def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray, condi
         mean = (arrayImage[:, :, 0] + arrayImage[:, :, 1] + arrayImage[:, :, 2]) // 3
 
         intencityRegionGrowing = regionGrowingForOneChannel(seedPointList, mean, conditionValue)
+        red = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 0], conditionValue)
+        green = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 1], conditionValue)
+        blue = regionGrowingForOneChannel(seedPointList, arrayImage[:, :, 2], conditionValue)
 
         region = []
         k = []
@@ -50,16 +53,21 @@ def regionGrowing(seedPointList: list[(int, int)], arrayImage: np.ndarray, condi
             region.append(np.zeros_like(arrayImage))
             k.append(np.zeros_like(arrayImage))
 
-        for i in range(len(seedPointList)):
             for x in range(len(arrayImage)):
                 for y in range(len(arrayImage[0])):
                     if mean[x, y] != 0:
                         k[i][x, y] = intencityRegionGrowing[i][x, y] / mean[x, y]
 
-        for i in range(len(seedPointList)):
-            region[i][:, :, 2] = np.clip(arrayImage[:, :, 2] * k[i][:, :, 2], 0, 255)
-            region[i][:, :, 1] = np.clip(arrayImage[:, :, 1] * k[i][:, :, 1], 0, 255)
-            region[i][:, :, 0] = np.clip(arrayImage[:, :, 0] * k[i][:, :, 0], 0, 255)
+            region[i][:, :, 2] = arrayImage[:, :, 2] * k[i][:, :, 2]
+            region[i][:, :, 1] = arrayImage[:, :, 1] * k[i][:, :, 1]
+            region[i][:, :, 0] = arrayImage[:, :, 0] * k[i][:, :, 0]
+
+            for x in range(len(arrayImage)):
+                for y in range(len(arrayImage[0])):
+                    if red[i][x, y] == -1 or green[i][x, y] == -1 or blue[i][x, y] == -1:
+                        region[i][x, y, :] = -1
+
+            region[i] = np.clip(region[i], 0, 255)
 
     for i in range(len(region)-1):
         j = i + 1
